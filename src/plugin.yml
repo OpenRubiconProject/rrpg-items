@@ -1,0 +1,11 @@
+name: RRPGItems
+version: 0.0.1
+authors: [ShawnClake, QuinnBast]
+main: com.openrubicon.items.RRPGItems
+depend: [RRPGCore]
+database: true
+website: https://github.com/OpenRubiconProject
+commands:
+      rrpg-items:
+               description: Spits out the current status of Rubicon Items and its versions
+               usage: /rrpg-items
