@@ -7,6 +7,9 @@ import com.openrubicon.core.events.PlayerMovedLocationEvent;
 import com.openrubicon.core.events.PlayerStandingStillEvent;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.nbt.ItemSpecs;
+import com.openrubicon.items.classes.sockets.nbt.SocketProperties;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -23,6 +26,8 @@ abstract public class Socket implements Persistable, Obfuscatable, Observeable, 
 
     private UUID uuid;
 
+    private ItemSpecs itemSpecs;
+
     abstract public String getKey();
 
     public SocketProperties getSocketProperties() {
@@ -31,6 +36,14 @@ abstract public class Socket implements Persistable, Obfuscatable, Observeable, 
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public ItemSpecs getItemSpecs() {
+        return itemSpecs;
+    }
+
+    public void setItemSpecs(ItemSpecs itemSpecs) {
+        this.itemSpecs = itemSpecs;
     }
 
     public void setObfuscated(boolean obfuscated) {
@@ -99,21 +112,21 @@ abstract public class Socket implements Persistable, Obfuscatable, Observeable, 
         return true;
     }
 
-    public void onPlayerInteract(PlayerInteractEvent e, FullItem item, InventorySlotType slot) {}
+    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, InventorySlotType slot) {}
 
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, FullItem item, InventorySlotType slot) {}
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, SpecialItem item, InventorySlotType slot) {}
 
-    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, FullItem item, InventorySlotType slot) {}
+    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, SpecialItem item, InventorySlotType slot) {}
 
-    public void onPlayerItemDamage(PlayerItemDamageEvent e, FullItem item, InventorySlotType slot) {}
+    public void onPlayerItemDamage(PlayerItemDamageEvent e, SpecialItem item, InventorySlotType slot) {}
 
-    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, FullItem item, InventorySlotType slot) {}
+    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, SpecialItem item, InventorySlotType slot) {}
 
-    public void onPlayerStandingStill(PlayerStandingStillEvent e, FullItem item, InventorySlotType slot) {}
+    public void onPlayerStandingStill(PlayerStandingStillEvent e, SpecialItem item, InventorySlotType slot) {}
 
-    public void onEntityDeath(EntityDeathEvent e, FullItem item, InventorySlotType slot) {}
+    public void onEntityDeath(EntityDeathEvent e, SpecialItem item, InventorySlotType slot) {}
 
-    public void onEntityDamage(EntityDamageEvent e, FullItem item, InventorySlotType slot) {}
+    public void onEntityDamage(EntityDamageEvent e, SpecialItem item, InventorySlotType slot) {}
 
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent e, FullItem item, InventorySlotType slot) {}
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent e, SpecialItem item, InventorySlotType slot) {}
 }

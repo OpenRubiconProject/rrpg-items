@@ -1,57 +1,78 @@
 package com.openrubicon.items.classes.sockets.effects;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.RRPGItems;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Martyrdom extends Socket {
-    public float fuse = 40f;
+    public int fuse = 40;
 
-    public Martyrdom() {
-        super();
-        this.name = "Martyrdom";
-        this.key = "martyrdom";
-        this.description = "Drops primed TNT on your body when you die.";
-        this.materials.addAll(MaterialGroups.ARMOR);
+    @Override
+    public String getKey() {
+        return "bounce";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.ARMOR;
+    }
+
+    @Override
+    public String getName() {
+        return "Bounce";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Landing on the ground will bounce you back up in the air";
+    }
+
+    @Override
+    public boolean generate()
     {
+        super.generate();
+
         double min = 1;
-        double max = i.getPowerScore();
-        fuse = (float) ((Math.random() * (max - min)) + min);
+        double max = this.getItemSpecs().getPower();
+        fuse = (int) ((Math.random() * (max - min)) + min);
         fuse = 20 - fuse;
         fuse *= 3;
-        return true;
-    }
-
-    @Override
-    public String save() {
-        return this.getDefaultSaveString() + ",fuse:" + this.fuse;
-    }
-
-    @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        if (settingsMap.containsKey("fuse"))
-            this.fuse = Float.parseFloat(settingsMap.get("fuse"));
 
         return true;
     }
 
     @Override
-    public void onEntityDeath(EntityDeathEvent e, FullItem item, Inventory.SlotType slot)
+    public boolean save() {
+
+        this.getSocketProperties().addInteger("fuse", this.fuse);
+        return super.save();
+    }
+
+    @Override
+    public boolean load() {
+        super.load();
+
+        this.fuse = this.getSocketProperties().getInteger("fuse");
+
+        return true;
+    }
+
+    @Override
+    public void onEntityDeath(EntityDeathEvent e, SpecialItem item, InventorySlotType slot)
     {
         Location location = e.getEntity().getLocation();
 
         TNTPrimed tnt = e.getEntity().getWorld().spawn(location, TNTPrimed.class);
-        tnt.setFuseTicks((int)this.fuse);
-        tnt.setMetadata("BlockDamage", new FixedMetadataValue(Economics.plugin, false));
+        tnt.setFuseTicks(this.fuse);
+        tnt.setMetadata("BlockDamage", new FixedMetadataValue(RRPGItems.plugin, false));
     }
 }

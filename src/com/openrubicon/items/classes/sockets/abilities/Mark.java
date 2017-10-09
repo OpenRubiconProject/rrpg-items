@@ -1,58 +1,74 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Mark extends Socket {
-    public float length = 5;
 
-    public Mark() {
-        super();
-        this.name = "Mark";
-        this.key = "mark";
-        this.description = "Attacking a player will cause them to glow";
-        this.materials.addAll(MaterialGroups.TOOLS);
+    public double length = 5;
+
+    @Override
+    public String getKey() {
+        return "mark";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.TOOLS;
+    }
+
+    @Override
+    public String getName() {
+        return "Mark";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Attacking a player will cause them to glow";
+    }
+
+    @Override
+    public boolean generate()
     {
-        length = (float)(Math.random() * (i.getPowerScore() - (i.getPowerScore() / 2)) + (i.getPowerScore() / 2)) + 3;
-        length *= 20; // Duration is in ticks. 20 ticks per second.
-        return true;
-    }
+        super.generate();
 
-    @Override
-    public String save() {
-        return this.getDefaultSaveString()+",length:" + this.length;
-    }
-
-    @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        //Bukkit.broadcastMessage("Hashmap was created");
-        //Bukkit.broadcastMessage("Hashmap has size: " + settingsMap.size());
-
-        /*settingsMap.forEach((key, value) -> {
-            Bukkit.getLogger().info("setting : " + key + " value : " + value);
-        });*/
-
-        if(settingsMap.containsKey("length"))
-            this.length = Float.parseFloat(settingsMap.get("length"));
-
-        //Bukkit.broadcastMessage("Speed property is: " + this.speed);
+        double min = this.getItemSpecs().getPower() / 2.;
+        double max = this.getItemSpecs().getPower();
+        length = Helpers.randomDouble(min, max) + 3;
+        length *= 20;
 
         return true;
     }
 
     @Override
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, FullItem item, Inventory.SlotType slot)
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("length", this.length);
+        return super.save();
+    }
+
+    @Override
+    public boolean load() {
+        super.load();
+
+        this.length = this.getSocketProperties().getDouble("length");
+
+        return true;
+    }
+
+
+    @Override
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, SpecialItem item, InventorySlotType slot)
     {
         if(!(e.getEntity() instanceof Player))
             return;

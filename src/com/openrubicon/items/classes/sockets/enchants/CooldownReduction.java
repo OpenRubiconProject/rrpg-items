@@ -1,26 +1,43 @@
 package com.openrubicon.items.classes.sockets.enchants;
 
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class CooldownReduction extends Socket {
 
-    protected int cdr = 5;
+    private int cdr = 5;
 
-    public CooldownReduction() {
-        super();
-        this.name = "Cooldown Reduction";
-        this.key = "cooldown_reduction";
-        this.description = "Reduces the cooldowns on all your items.";
-        this.materials.addAll(MaterialGroups.ARMOR);
+    @Override
+    public String getKey() {
+        return "cooldown_reduction";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.ARMOR;
+    }
+
+    @Override
+    public String getName() {
+        return "Cooldown Reduction";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Reduces the cooldowns on all your items";
+    }
+
+    @Override
+    public boolean generate()
     {
+        super.generate();
+
         double min = 1;
-        double max = (i.getPowerScore() / 2) * i.getRarityScore();
+        double max = (this.getItemSpecs().getPower() / 2) * this.getItemSpecs().getRarity();
 
         if(max <= min)
             max = 2 * min;
@@ -34,21 +51,23 @@ public class CooldownReduction extends Socket {
     }
 
     @Override
-    public String save() {
-        return this.getDefaultSaveString() + ",cdr:" + this.cdr;
+    public boolean save() {
+
+        this.getSocketProperties().addInteger("cdr", this.cdr);
+        return super.save();
     }
 
     @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
+    public boolean load() {
+        super.load();
 
-        if (settingsMap.containsKey("cdr"))
-            this.cdr = Integer.parseInt(settingsMap.get("cdr"));
+        this.cdr = this.getSocketProperties().getInteger("cdr");
 
         return true;
     }
 
-    public int getCDR() {
+
+    public int getCdr() {
         return this.cdr;
     }
 

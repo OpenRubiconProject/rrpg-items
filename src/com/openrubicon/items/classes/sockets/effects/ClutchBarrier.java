@@ -1,56 +1,80 @@
 package com.openrubicon.items.classes.sockets.effects;
 
-import com.openrubicon.items.classes.sockets.Socket;
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.sockets.CooldownSocket;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
-public class ClutchBarrier extends Socket {
-    public float amount = 10f;
+public class ClutchBarrier extends CooldownSocket {
+    public double amount = 10;
 
-    public ClutchBarrier() {
-        super();
-        this.name = "Clutch Barrier";
-        this.key = "clutch_barrier";
-        this.description = "Upon taking a killing blow, activate a health barrier to save you from death.";
-        this.materials.addAll(MaterialGroups.CHESTPLATES);
-
-        this.usingCooldown = true;
-        this.cooldownLength = 180 * 20;
+    @Override
+    public String getKey() {
+        return "clutch_barrier";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i) {
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.CHESTPLATES;
+    }
+
+    @Override
+    public String getName() {
+        return "Clutch Barrier";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Upon taking a killing blow, activate a health barrier to save you from death";
+    }
+
+    @Override
+    public boolean generate()
+    {
+        super.generate();
+
         double min = 1;
-        double max = i.getPowerScore() * i.getRarityScore();
+        double max = this.getItemSpecs().getPower() * this.getItemSpecs().getRarity();
         if(max <= min)
-            max = 2 * min;
+            max = 2;
         this.amount = (int) Helpers.scale(Helpers.randomDouble(min, max), min, 121, 20, 60);
-        return true;
-    }
-
-    @Override
-    public String save() {
-        return this.getDefaultSaveString() + ",amount:" + this.amount;
-    }
-
-    @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        if (settingsMap.containsKey("amount"))
-            this.amount = Float.parseFloat(settingsMap.get("amount"));
 
         return true;
     }
 
     @Override
-    public void onEntityDamage(EntityDamageEvent e, FullItem item, Inventory.SlotType slot) {
-        if(this.onCooldown())
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("amount", this.amount);
+        return super.save();
+    }
+
+    @Override
+    public boolean load() {
+        super.load();
+
+        this.amount = this.getSocketProperties().getDouble("amount");
+
+        return true;
+    }
+
+    @Override
+    public int getCooldownLengthTicks() {
+        return Helpers.secondsToTicks(180);
+    }
+
+    @Override
+    public void onEntityDamage(EntityDamageEvent e, SpecialItem item, InventorySlotType slot) {
+        if(this.isOnCooldown())
             return;
 
         if(!(e.getEntity() instanceof LivingEntity))
@@ -68,7 +92,6 @@ public class ClutchBarrier extends Socket {
         e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1f, 1f);
         e.getEntity().getWorld().spawnParticle(Particle.SPELL_INSTANT, e.getEntity().getLocation(), 50);
 
-        //CooldownManager.start((Player)e.getEntity(), this.getKey(), this.getCooldown(), slot);
-        this.startCooldown((LivingEntity)e.getEntity(), slot);
+        this.startCooldown();
     }
 }

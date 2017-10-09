@@ -4,6 +4,7 @@ import com.openrubicon.core.api.inventory.enums.InventorySlotType;
 import com.openrubicon.core.events.PlayerLandOnGroundEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -41,7 +42,9 @@ public class Bounce extends Socket {
     {
         super.generate();
 
-        force = (Math.random() * (i.getPowerScore() - (i.getPowerScore() / 2.)) + (i.getPowerScore() / 2.));
+        double min = this.getItemSpecs().getPower() / 2.;
+        double max = this.getItemSpecs().getPower();
+        force = Helpers.randomDouble(min, max);
         force = Helpers.scale(force, 1, 11, 0.25, 0.95);
 
         return true;
@@ -50,7 +53,7 @@ public class Bounce extends Socket {
     @Override
     public boolean save() {
 
-        this.getSocketProperties().add("force", String.valueOf(this.force));
+        this.getSocketProperties().addDouble("force", this.force);
         return super.save();
     }
 
@@ -58,13 +61,13 @@ public class Bounce extends Socket {
     public boolean load() {
         super.load();
 
-        this.force = Double.parseDouble(this.getSocketProperties().get("force"));
+        this.force = this.getSocketProperties().getDouble("force");
 
         return true;
     }
 
     @Override
-    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, FullItem item, InventorySlotType slot)
+    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, SpecialItem item, InventorySlotType slot)
     {
         Player p = e.getPlayer();
 

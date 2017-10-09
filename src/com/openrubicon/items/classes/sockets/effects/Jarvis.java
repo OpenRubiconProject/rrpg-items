@@ -1,36 +1,30 @@
 package com.openrubicon.items.classes.sockets.effects;
 
+import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Jarvis extends Socket {
-    //public float fuse = 40f;
 
-    public Jarvis() {
-        super();
-        this.name = "Jarvis";
-        this.key = "jarvis";
-        this.description = "Alerts you of your chance of survival when taking on a target.";
-        this.materials.addAll(MaterialGroups.HELMETS);
+    @Override
+    public String getKey() {
+        return "jarvis";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
-    {
-        return true;
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.HELMETS;
     }
 
     @Override
-    public String save()
-    {
-        return this.getDefaultSaveString();
+    public String getName() {
+        return "Jarvis";
     }
 
     @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-        return true;
+    public String getDescription() {
+        return "Alerts you of your chance of survival when taking on a target";
     }
-
 }

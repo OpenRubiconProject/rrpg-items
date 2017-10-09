@@ -8,12 +8,16 @@ import com.openrubicon.items.classes.sockets.SocketProvider;
 import com.openrubicon.items.classes.sockets.abilities.*;
 import com.openrubicon.items.classes.sockets.enchants.*;
 import com.openrubicon.items.classes.sockets.effects.*;
+import com.openrubicon.items.classes.sockets.events.SocketActionEventListener;
 import com.openrubicon.items.events.EventListener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 
 public class RRPGItems extends JavaPlugin implements Module {
+
+    public static Plugin plugin;
 
     @Override
     public ArrayList<DatabaseModel> getDatabaseModels() {
@@ -49,11 +53,14 @@ public class RRPGItems extends JavaPlugin implements Module {
     @Override
     public void onEnable()
     {
-        this.addSocketsToProvider();
-        getLogger().info("Sockets injected");
+        RRPGItems.plugin = this;
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
+        getServer().getPluginManager().registerEvents(new SocketActionEventListener(), this);
         getLogger().info("Registered Events");
+
+        this.addSocketsToProvider();
+        getLogger().info("Sockets injected");
     }
 
     @Override

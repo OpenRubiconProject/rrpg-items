@@ -1,52 +1,72 @@
 package com.openrubicon.items.classes.sockets.effects;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.RRPGItems;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Striking extends Socket {
-    public float damage = 2f;
+    public double damage = 2;
 
-    public Striking() {
-        super();
-        this.name = "Striking";
-        this.key = "striking";
-        this.description = "Strikes the entity that killed you with lightning.";
-        this.materials.addAll(MaterialGroups.HELMETS);
+    @Override
+    public String getKey() {
+        return "striking";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.HELMETS;
+    }
+
+    @Override
+    public String getName() {
+        return "Striking";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Strikes the entity that killed you with lightning";
+    }
+
+    @Override
+    public boolean generate()
     {
+        super.generate();
+
         double min = 1;
-        double max = i.getPowerScore();
+        double max = this.getItemSpecs().getPower();
 
-        damage = (float) ((Math.random() * (max - min)) + min) * 2;
-
-        return true;
-    }
-
-    @Override
-    public String save() {
-        return this.getDefaultSaveString() + ",damage:" + this.damage;
-    }
-
-    @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        if (settingsMap.containsKey("damage"))
-            this.damage = Float.parseFloat(settingsMap.get("damage"));
+        damage = ((Math.random() * (max - min)) + min) * 2;
 
         return true;
     }
 
     @Override
-    public void onEntityDeath(EntityDeathEvent e, FullItem item, Inventory.SlotType slot)
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("damage", this.damage);
+        return super.save();
+    }
+
+    @Override
+    public boolean load() {
+        super.load();
+
+        this.damage = this.getSocketProperties().getDouble("damage");
+
+        return true;
+    }
+
+    @Override
+    public void onEntityDeath(EntityDeathEvent e, SpecialItem item, InventorySlotType slot)
     {
         if(e.getEntity().getKiller() == null)
             return;
@@ -54,6 +74,6 @@ public class Striking extends Socket {
         Location location = e.getEntity().getKiller().getLocation();
 
         LightningStrike lightning = e.getEntity().getWorld().strikeLightning(location);
-        lightning.setMetadata("DamageMod", new FixedMetadataValue(Economics.plugin, this.damage));
+        lightning.setMetadata("DamageMod", new FixedMetadataValue(RRPGItems.plugin, this.damage));
     }
 }

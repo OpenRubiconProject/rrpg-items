@@ -1,26 +1,44 @@
 package com.openrubicon.items.classes.sockets.effects;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class SteelFeet extends Socket {
-    public float ratio = 1.1f;
+    public double ratio = 1.1f;
 
-    public SteelFeet() {
-        super();
-        this.name = "Steel Feet";
-        this.key = "steel_feet";
-        this.description = "Reduces damage taken from falling";
-        this.materials.addAll(MaterialGroups.BOOTS);
+    @Override
+    public String getKey() {
+        return "steel_feet";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.BOOTS;
+    }
+
+    @Override
+    public String getName() {
+        return "Steel Feet";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Landing on the ground will bounce you back up in the air";
+    }
+
+    @Override
+    public boolean generate()
     {
+        super.generate();
+
         double min = 1.1;
-        double max = i.getPowerScore();
+        double max = this.getItemSpecs().getPower();
 
         if(max < min)
             max = 1.5;
@@ -31,22 +49,24 @@ public class SteelFeet extends Socket {
     }
 
     @Override
-    public String save() {
-        return this.getDefaultSaveString() + ",ratio:" + this.ratio;
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("ratio", this.ratio);
+        return super.save();
     }
 
     @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
+    public boolean load() {
+        super.load();
 
-        if (settingsMap.containsKey("ratio"))
-            this.ratio = Float.parseFloat(settingsMap.get("ratio"));
+        this.ratio = this.getSocketProperties().getDouble("ratio");
 
         return true;
     }
 
+
     @Override
-    public void onEntityDamage(EntityDamageEvent e, FullItem item, Inventory.SlotType slot)
+    public void onEntityDamage(EntityDamageEvent e, SpecialItem item, InventorySlotType slot)
     {
         if(e.getCause() == EntityDamageEvent.DamageCause.FALL)
         {

@@ -1,5 +1,12 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.inventory.PlayerInventory;
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.Constants;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.durability.Durability;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,43 +19,61 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Sapling;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class TreeHugger extends Socket {
 
-    public float species = 4f;
+    public int species = 4;
 
-    public TreeHugger() {
-        super();
-        this.name = "Tree Hugger";
-        this.key = "tree_hugger";
-        this.description = "Consumes 45 durability to plant a sapling when right clicking grass";
-        this.materials.addAll(MaterialGroups.AXES);
+    @Override
+    public String getKey() {
+        return "tree_hugger";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.AXES;
+    }
+
+    @Override
+    public String getName() {
+        return "Tree Hugger";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Consumes 45 durability to plant a sapling when right clicking grass";
+    }
+
+    @Override
+    public boolean generate()
     {
+        super.generate();
+
         this.species = Helpers.randomInt(1, 6);
-        return true;
-    }
-
-    @Override
-    public String save() {
-        return this.getDefaultSaveString()+",species:" + this.species;
-    }
-
-    @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        if(settingsMap.containsKey("species"))
-            this.species = Float.parseFloat(settingsMap.get("species"));
 
         return true;
     }
 
     @Override
-    public void onPlayerInteract(PlayerInteractEvent e, FullItem item, Inventory.SlotType slot)
+    public boolean save() {
+
+        this.getSocketProperties().addInteger("species", this.species);
+        return super.save();
+    }
+
+    @Override
+    public boolean load() {
+        super.load();
+
+        this.species = this.getSocketProperties().getInteger("species");
+
+        return true;
+    }
+
+
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, InventorySlotType slot)
     {
         if(e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking())
             return;
@@ -63,7 +88,7 @@ public class TreeHugger extends Socket {
 
         if(!durability.hasDurability(45))
         {
-            e.getPlayer().sendMessage(Helpers.colorize(Configuration.YELLOW + "Your item doesn't have enough durability to plant a sapling."));
+            e.getPlayer().sendMessage(Helpers.colorize(Constants.YELLOW + "Your item doesn't have enough durability to plant a sapling."));
             return;
         }
 
@@ -76,11 +101,11 @@ public class TreeHugger extends Socket {
         durability.adjustDurability(-45);
 
         PlayerInventory inventory = new PlayerInventory(e.getPlayer());
-        inventory.setSlot(slot, durability.getItem());
+        inventory.setSlotItem(slot, durability.getItem());
 
         Sapling sapling;
 
-        switch((int)this.species) {
+        switch(this.species) {
             case 1:
                 sapling = new Sapling(TreeSpecies.ACACIA);
                 break;

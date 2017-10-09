@@ -1,59 +1,75 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.events.PlayerLandOnGroundEvent;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Groundsplosion extends Socket {
-    public float force = 5;
 
-    public Groundsplosion() {
-        super();
-        this.name = "Groundsplosion";
-        this.key = "groundsplosion";
-        this.description = "Throws all nearby entities away from you";
-        this.materials.addAll(MaterialGroups.BOOTS);
+    public double force = 5;
+
+    @Override
+    public String getKey() {
+        return "groundsplosion";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.BOOTS;
+    }
+
+    @Override
+    public String getName() {
+        return "Groundsplosion";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Throws all nearby entities away from you";
+    }
+
+    @Override
+    public boolean generate()
     {
-        force = (float)(Math.random() * (i.getPowerScore() - (i.getPowerScore() / 2)) + (i.getPowerScore() / 2));
-        return true;
-    }
+        super.generate();
 
-    @Override
-    public String save() {
-        return this.getDefaultSaveString()+",force:" + this.force;
-    }
-
-    @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        //Bukkit.broadcastMessage("Hashmap was created");
-        //Bukkit.broadcastMessage("Hashmap has size: " + settingsMap.size());
-
-        /*settingsMap.forEach((key, value) -> {
-            Bukkit.getLogger().info("setting : " + key + " value : " + value);
-        });*/
-
-        if(settingsMap.containsKey("force"))
-            this.force = Float.parseFloat(settingsMap.get("force"));
-
-        //Bukkit.broadcastMessage("Speed property is: " + this.speed);
+        double min = this.getItemSpecs().getPower() / 2.;
+        double max = this.getItemSpecs().getPower();
+        force = Helpers.randomDouble(min, max);
 
         return true;
     }
 
     @Override
-    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, FullItem item, Inventory.SlotType slot)
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("force", this.force);
+        return super.save();
+    }
+
+    @Override
+    public boolean load() {
+        super.load();
+
+        this.force = this.getSocketProperties().getDouble("force");
+
+        return true;
+    }
+
+    @Override
+    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, SpecialItem item, InventorySlotType slot)
     {
         Player p = e.getPlayer();
 

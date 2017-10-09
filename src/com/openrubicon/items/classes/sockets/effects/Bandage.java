@@ -1,60 +1,73 @@
 package com.openrubicon.items.classes.sockets.effects;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.events.PlayerStandingStillEvent;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Bandage extends Socket {
-    public float rate = 1f;
 
-    public Bandage() {
-        super();
-        this.name = "Bandage";
-        this.key = "bandage";
-        this.description = "Regenerates health faster while standing still.";
-        this.materials.addAll(MaterialGroups.ARMOR);
+    public double rate = 1.;
+
+    @Override
+    public String getKey() {
+        return "bandage";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i) {
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.ARMOR;
+    }
+
+    @Override
+    public String getName() {
+        return "Bandage";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Regenerates health faster while standing still";
+    }
+
+    @Override
+    public boolean generate()
+    {
+        super.generate();
+
         double min = 1;
-        double max = (i.getPowerScore() + 1) / 2;
-        //Bukkit.broadcastMessage("Max: " + max);
-        //Bukkit.broadcastMessage("Min: " + min);
-        //Bukkit.broadcastMessage("Random Num: " + ((Math.random() * (max - min)) + min) );
-        rate = (float) ((Math.random() * (max - min)) + min);
-        return true;
-    }
-
-    @Override
-    public String save() {
-        return this.getDefaultSaveString() + ",rate:" + this.rate;
-    }
-
-    @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        //Bukkit.broadcastMessage("Hashmap was created");
-        //Bukkit.broadcastMessage("Hashmap has size: " + settingsMap.size());
-
-        /*settingsMap.forEach((key, value) -> {
-            Bukkit.getLogger().info("setting : " + key + " value : " + value);
-        });*/
-
-        if (settingsMap.containsKey("rate"))
-            this.rate = Float.parseFloat(settingsMap.get("rate"));
-
-        //Bukkit.broadcastMessage("Speed property is: " + this.speed);
+        double max = (this.getItemSpecs().getPower() + 1) / 2;
+        rate = Helpers.randomDouble(min, max);
 
         return true;
     }
 
     @Override
-    public void onPlayerStandingStill(PlayerStandingStillEvent e, FullItem item, Inventory.SlotType slot)
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("rate", this.rate);
+        return super.save();
+    }
+
+    @Override
+    public boolean load() {
+        super.load();
+
+        this.rate = this.getSocketProperties().getDouble("rate");
+
+        return true;
+    }
+
+
+    @Override
+    public void onPlayerStandingStill(PlayerStandingStillEvent e, SpecialItem item, InventorySlotType slot)
     {
         Player p = e.getPlayer();
 

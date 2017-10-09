@@ -1,41 +1,62 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class NaughtyCreeper extends Socket {
 
-    public NaughtyCreeper() {
-        super();
-        this.name = "Naughty Creeper";
-        this.key = "naughty_creeper";
-        this.description = "Stops creepers from exploding and freezes them in place.";
-        this.materials.addAll(MaterialGroups.HAND_HELD);
+    @Override
+    public String getKey() {
+        return "naughty_creeper";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.HAND_HELD;
+    }
+
+    @Override
+    public String getName() {
+        return "Naughty Creeper";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Stops creepers from exploding and freezes them in place";
+    }
+
+    @Override
+    public boolean generate()
     {
+        super.generate();
+
         return true;
     }
 
     @Override
-    public String save() {
-        return this.getDefaultSaveString();
+    public boolean save() {
+
+        return super.save();
     }
 
     @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
+    public boolean load() {
+        super.load();
+
         return true;
     }
 
+
     @Override
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, FullItem item, Inventory.SlotType slot)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, SpecialItem item, InventorySlotType slot)
     {
         if(e.getDamager() instanceof Player && e.getEntity() instanceof Creeper)
         {

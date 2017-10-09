@@ -1,6 +1,11 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.block.Action;
@@ -8,57 +13,69 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class RadialMark extends Socket {
-    public float length = 5;
-    public float radius = 10;
+    public double length = 5;
+    public double radius = 10;
 
-    public RadialMark() {
-        super();
-        this.name = "Radial Mark";
-        this.key = "radial_mark";
-        this.description = "Reveals all nearby entities for a short time";
-        this.materials.addAll(MaterialGroups.TOOLS);
+    @Override
+    public String getKey() {
+        return "radial_mark";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.TOOLS;
+    }
+
+    @Override
+    public String getName() {
+        return "Radial Mark";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Reveals all nearby entities for a short time";
+    }
+
+    @Override
+    public boolean generate()
     {
-        length = (float)(Math.random() * (i.getPowerScore() - (i.getPowerScore() / 2)) + (i.getPowerScore() / 2));
-        length *= 20; // Duration is in ticks. 20 ticks per second.
-        radius = (float)(Math.random() * ((i.getPowerScore() * 2) - (i.getPowerScore())) + (i.getPowerScore()));
-        return true;
-    }
+        super.generate();
 
-    @Override
-    public String save() {
-        return this.getDefaultSaveString()+",length:" + this.length+",radius:"+this.radius;
-    }
+        double min = this.getItemSpecs().getPower() / 2.;
+        double max = this.getItemSpecs().getPower();
+        length = Helpers.randomDouble(min, max);
+        length *= 20;
 
-    @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        //Bukkit.broadcastMessage("Hashmap was created");
-        //Bukkit.broadcastMessage("Hashmap has size: " + settingsMap.size());
-
-        /*settingsMap.forEach((key, value) -> {
-            Bukkit.getLogger().info("setting : " + key + " value : " + value);
-        });*/
-
-        if(settingsMap.containsKey("length"))
-            this.length = Float.parseFloat(settingsMap.get("length"));
-        if(settingsMap.containsKey("radius"))
-            this.radius = Float.parseFloat(settingsMap.get("radius"));
-
-        //Bukkit.broadcastMessage("Speed property is: " + this.speed);
+        min = this.getItemSpecs().getPower();
+        max = this.getItemSpecs().getPower() * 2;
+        radius = Helpers.randomDouble(min, max);
 
         return true;
     }
 
     @Override
-    public void onPlayerInteract(PlayerInteractEvent e, FullItem item, Inventory.SlotType slot)
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("length", this.length);
+        this.getSocketProperties().addDouble("radius", this.radius);
+        return super.save();
+    }
+
+    @Override
+    public boolean load() {
+        super.load();
+
+        this.length = this.getSocketProperties().getDouble("length");
+        this.radius = this.getSocketProperties().getDouble("radius");
+
+        return true;
+    }
+
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, InventorySlotType slot)
     {
         if((e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) || !e.getPlayer().isSneaking())
             return;

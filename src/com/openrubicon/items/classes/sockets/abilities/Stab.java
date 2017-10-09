@@ -1,51 +1,77 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.sockets.CooldownSocket;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
-public class Stab extends Socket {
-    public float damage = 5;
+public class Stab extends CooldownSocket {
 
-    public Stab() {
-        super();
-        this.name = "Stab";
-        this.key = "stab";
-        this.description = "Right click a player to deal instant damage.";
-        this.materials.addAll(MaterialGroups.SWORDS);
+    public double damage = 5;
 
-        this.usingCooldown = true;
-        this.cooldownLength = 5 * 20;
+    @Override
+    public String getKey() {
+        return "stab";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.SWORDS;
+    }
+
+    @Override
+    public String getName() {
+        return "Stab";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Right click a player to deal instant damage";
+    }
+
+    @Override
+    public int getCooldownLengthTicks() {
+        return Helpers.secondsToTicks(5);
+    }
+
+    @Override
+    public boolean generate()
     {
-        damage = Helpers.randomInt(1, (int)i.getPowerScore() + 1);
+        super.generate();
+
+        damage = Helpers.randomInt(1, (int)this.getItemSpecs().getPower() + 1);
+
         return true;
     }
 
     @Override
-    public String save() {
-        return this.getDefaultSaveString()+",damage:" + this.damage;
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("damage", this.damage);
+        return super.save();
     }
 
     @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
+    public boolean load() {
+        super.load();
 
-        if(settingsMap.containsKey("damage"))
-            this.damage = Float.parseFloat(settingsMap.get("damage"));
+        this.damage = this.getSocketProperties().getDouble("damage");
 
         return true;
     }
 
     @Override
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent e, FullItem item, Inventory.SlotType slot)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent e, SpecialItem item, InventorySlotType slot)
     {
-        if(this.onCooldown())
+        if(this.isOnCooldown())
             return;
 
         if(!e.getPlayer().isSneaking())
@@ -59,7 +85,7 @@ public class Stab extends Socket {
 
         entity.damage(this.damage);
 
-        this.startCooldown(e.getPlayer(), slot);
+        this.startCooldown();
     }
 
 }

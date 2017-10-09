@@ -1,6 +1,11 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -8,53 +13,68 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Launch extends Socket {
 
-    public float force = 5;
+    public double force = 5;
 
-    public Launch() {
-        super();
-        this.name = "Launch";
-        this.key = "launch";
-        this.description = "Launches you straight up into the air.";
-        this.materials.addAll(MaterialGroups.DIAMOND_TOOLS);
-        this.materials.addAll(MaterialGroups.GOLD_TOOLS);
-        this.materials.addAll(MaterialGroups.IRON_TOOLS);
+    @Override
+    public String getKey() {
+        return "launch";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i) {
-        force = (float) (Math.random() * (i.getPowerScore() - (i.getPowerScore() / 2)) + (i.getPowerScore() / 2));
+    public HashSet<Material> getMaterials() {
+        HashSet<Material> materials = new HashSet<>();
+        materials.addAll(MaterialGroups.DIAMOND_TOOLS);
+        materials.addAll(MaterialGroups.GOLD_TOOLS);
+        materials.addAll(MaterialGroups.IRON_TOOLS);
+        return materials;
+    }
+
+    @Override
+    public String getName() {
+        return "Launch";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Launches you straight up into the air";
+    }
+
+    @Override
+    public boolean generate()
+    {
+        super.generate();
+
+        double min = this.getItemSpecs().getPower() / 2.;
+        double max = this.getItemSpecs().getPower();
+        force = Helpers.randomDouble(min, max);
+        force = Helpers.scale(force, 1, 11, 0.25, 0.95);
+
         return true;
     }
 
     @Override
-    public String save() {
-        return this.getDefaultSaveString() + ",force:" + this.force;
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("force", this.force);
+        return super.save();
     }
 
     @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
+    public boolean load() {
+        super.load();
 
-        //Bukkit.broadcastMessage("Hashmap was created");
-        //Bukkit.broadcastMessage("Hashmap has size: " + settingsMap.size());
-
-        /*settingsMap.forEach((key, value) -> {
-            Bukkit.getLogger().info("setting : " + key + " value : " + value);
-        });*/
-
-        if (settingsMap.containsKey("force"))
-            this.force = Float.parseFloat(settingsMap.get("force"));
-
-        //Bukkit.broadcastMessage("Speed property is: " + this.speed);
+        this.force = this.getSocketProperties().getDouble("force");
 
         return true;
     }
 
+
     @Override
-    public void onPlayerInteract(PlayerInteractEvent e, FullItem item, Inventory.SlotType slot)
+    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, InventorySlotType slot)
     {
         if((e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) || !e.getPlayer().isSneaking())
             return;

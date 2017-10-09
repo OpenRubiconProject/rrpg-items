@@ -1,49 +1,72 @@
 package com.openrubicon.items.classes.sockets.effects;
 
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.events.PlayerMovedLocationEvent;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class MarathonRunner extends Socket {
-    public float rate = 0.01f;
+    public double rate = 0.01;
 
-    public MarathonRunner() {
-        super();
-        this.name = "Marathon Runner";
-        this.key = "marathon_runner";
-        this.description = "Gain XP as you move and run around.";
-        this.materials.addAll(MaterialGroups.ARMOR);
+    @Override
+    public String getKey() {
+        return "marathon_runner";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i) {
-        double min = i.getPowerScore() / 2;
-        double max = i.getPowerScore();
-        rate = (float) ((Math.random() * (max - min)) + min);
+    public HashSet<Material> getMaterials() {
+        return MaterialGroups.ARMOR;
+    }
+
+    @Override
+    public String getName() {
+        return "Marathon Runner";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Gain XP as you move and run around";
+    }
+
+    @Override
+    public boolean generate()
+    {
+        super.generate();
+
+        double min = this.getItemSpecs().getPower() / 2.;
+        double max = this.getItemSpecs().getPower();
+        rate = Helpers.randomDouble(min, max);
+
         return true;
     }
 
     @Override
-    public String save() {
-        return this.getDefaultSaveString() + ",rate:" + this.rate;
+    public boolean save() {
+
+        this.getSocketProperties().addDouble("rate", this.rate);
+        return super.save();
     }
 
     @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
+    public boolean load() {
+        super.load();
 
-        if (settingsMap.containsKey("rate"))
-            this.rate = Float.parseFloat(settingsMap.get("rate"));
+        this.rate = this.getSocketProperties().getDouble("rate");
 
         return true;
     }
 
     @Override
-    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, FullItem item, Inventory.SlotType slot) {
+    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, SpecialItem item, InventorySlotType slot) {
         Player p = e.getPlayer();
 
-        double amount = Helpers.getDistance(e.getPreviousLocation(), e.getCurrentLocation());
+        double amount = Helpers.getDistance(e.getPreviousLocation(), e.getNewLocation());
 
         if(amount < 1)
             amount = 1;

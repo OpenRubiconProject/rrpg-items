@@ -1,4 +1,4 @@
-package com.openrubicon.items.classes.sockets;
+package com.openrubicon.items.classes.sockets.nbt;
 
 import com.openrubicon.core.api.interfaces.Observeable;
 import com.openrubicon.core.api.nbt.Properties;

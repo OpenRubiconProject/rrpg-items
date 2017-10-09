@@ -36,4 +36,16 @@ abstract public class CooldownSocket extends Socket implements Cooldownable {
         SocketCooldownManager.add(this.cooldown);
         return true;
     }
+
+    public void startCooldown()
+    {
+        if(this.cooldown.isOnCooldown())
+            SocketCooldownManager.start(this.cooldown);
+    }
+
+    public boolean isOnCooldown()
+    {
+        return this.cooldown.isOnCooldown();
+    }
+
 }

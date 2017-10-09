@@ -1,40 +1,44 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.inventory.PlayerInventory;
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import org.bukkit.Material;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Unbreakable extends Socket {
 
-    public Unbreakable() {
-        super();
-        this.name = "Unbreakable";
-        this.key = "unbreakable";
-        this.description = "When your item runs out of durability, it will no longer break. Instead, it will stick around in your inventory, unusable, until you repair it.";
+    @Override
+    public String getKey() {
+        return "unbreakable";
     }
 
     @Override
-    public boolean generateSocket(Item.ItemNbt i)
-    {
-        return true;
+    public HashSet<Material> getMaterials() {
+        HashSet<Material> materials = new HashSet<>();
+        materials.addAll(MaterialGroups.TOOLS);
+        materials.addAll(MaterialGroups.ARMOR);
+        return materials;
     }
 
     @Override
-    public String save() {
-        return this.getDefaultSaveString();
+    public String getName() {
+        return "Unbreakable";
     }
 
     @Override
-    public boolean load(String settings, UUID uuid) {
-        HashMap<String, String> settingsMap = settingsToArray(settings, uuid);
-
-        return true;
+    public String getDescription() {
+        return "When your item runs out of durability, it will no longer break. Instead, it will stick around in your inventory, unusable, until you repair it.";
     }
 
     @Override
-    public void onPlayerItemDamage(PlayerItemDamageEvent e, FullItem item, Inventory.SlotType slot)
+    public void onPlayerItemDamage(PlayerItemDamageEvent e, SpecialItem item, InventorySlotType slot)
     {
         if(!item.isSpecialItem())
             return;
@@ -51,7 +55,7 @@ public class Unbreakable extends Socket {
         i.setDurability((short)adjustedDurability);
 
         PlayerInventory inventory = new PlayerInventory(e.getPlayer());
-        inventory.setSlot(slot, i);
+        inventory.setSlotItem(slot, i);
 
         e.setCancelled(true);
     }
