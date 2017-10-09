@@ -8,7 +8,7 @@ import com.openrubicon.core.events.PlayerStandingStillEvent;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.classes.items.SpecialItem;
-import com.openrubicon.items.classes.items.nbt.ItemSpecs;
+import com.openrubicon.items.classes.items.specs.ItemSpecs;
 import com.openrubicon.items.classes.sockets.nbt.SocketProperties;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;

@@ -1,6 +1,13 @@
-package com.openrubicon.items.classes.items.nbt;
+package com.openrubicon.items.classes.items.specs;
 
-public class ItemSpecs {
+import com.openrubicon.core.api.interfaces.Loreable;
+import com.openrubicon.core.api.interfaces.Observeable;
+import com.openrubicon.core.helpers.Constants;
+import com.openrubicon.core.helpers.Helpers;
+
+import java.util.ArrayList;
+
+public class ItemSpecs implements Loreable, Observeable {
 
     private double rarity;
     private double sockets;
@@ -87,6 +94,26 @@ public class ItemSpecs {
 
     public void setThisPossibility(double thisPossibility) {
         this.thisPossibility = thisPossibility;
+    }
+
+    @Override
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(Constants.PRIMARY_COLOR + "Power: " + Constants.SECONDARY_COLOR + (int)this.getPower());
+        lore.add(Constants.PRIMARY_COLOR + "Sockets: " + Constants.SECONDARY_COLOR + (int)this.getSockets());
+        lore.add(Constants.PRIMARY_COLOR + "Points: " + Constants.SECONDARY_COLOR + (int)this.getAttributePoints());
+        lore.add(Constants.PRIMARY_COLOR + "Durability: " + Constants.SECONDARY_COLOR + (int)this.getDurabilityCurrent() + "/" + (int)this.getDurabilityMax());
+        return lore;
+    }
+
+    @Override
+    public ArrayList<String> getObservation() {
+        ArrayList<String> view = new ArrayList<>();
+        view.add(Constants.PRIMARY_COLOR + "Power: " + Constants.SECONDARY_COLOR + (int)this.getPower());
+        view.add(Constants.PRIMARY_COLOR + "Sockets: " + Constants.SECONDARY_COLOR + (int)this.getSockets());
+        view.add(Constants.PRIMARY_COLOR + "Points: " + Constants.SECONDARY_COLOR + (int)this.getAttributePoints());
+        view.add(Constants.PRIMARY_COLOR + "Durability: " + Constants.SECONDARY_COLOR + (int)this.getDurabilityCurrent() + "/" + (int)this.getDurabilityMax());
+        return Helpers.colorize(view);
     }
 
 }

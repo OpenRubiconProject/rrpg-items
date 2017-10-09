@@ -50,12 +50,7 @@ public class Durability implements Observeable {
         if(!item.isSpecialItem())
             return this.i.getDurability();
 
-        if(item.getStats().getItem() == null)
-        {
-            return 0;
-        }
-
-        return (int) item.getStats().getItem().getCurrentDurability();
+        return (int) item.getItemSpecs().getDurabilityCurrent();
     }
 
     public int getVisualDurability()
@@ -65,7 +60,7 @@ public class Durability implements Observeable {
         if(!item.isSpecialItem())
             return this.i.getDurability();
 
-        return i.getType().getMaxDurability() - ((int) Helpers.scale(this.getDurability(), 0, item.getStats().getItem().getMaxDurability(), 0, i.getType().getMaxDurability()));
+        return i.getType().getMaxDurability() - ((int) Helpers.scale(this.getDurability(), 0, item.getItemSpecs().getDurabilityMax(), 0, i.getType().getMaxDurability()));
     }
 
     public void adjustDurability(int amount)
@@ -75,7 +70,7 @@ public class Durability implements Observeable {
         if(!item.isSpecialItem())
             return;
 
-        item.getStats().getItem().setCurrentDurability(this.getDurability() + amount);
+        item.getItemSpecs().setDurabilityCurrent(this.getDurability() + amount);
 
         item.save();
 

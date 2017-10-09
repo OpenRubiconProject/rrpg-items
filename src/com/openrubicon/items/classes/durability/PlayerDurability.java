@@ -1,8 +1,9 @@
 package com.openrubicon.items.classes.durability;
 
-import com.shawnclake.economics.item.FullItem;
-import com.shawnclake.economics.item.inventory.Inventory;
-import com.shawnclake.economics.item.inventory.PlayerInventory;
+import com.openrubicon.core.api.inventory.PlayerInventory;
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.items.classes.durability.enums.DurabilityStatus;
+import com.openrubicon.items.classes.items.SpecialItem;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -63,23 +64,23 @@ public class PlayerDurability {
 
     public void handle()
     {
-        FullItem item = new FullItem(i);
+        SpecialItem item = new SpecialItem(i);
 
         if(!item.isSpecialItem())
             return;
 
         PlayerInventory inventory = new PlayerInventory(this.player);
 
-        Inventory.SlotType slot = inventory.getSlotType(this.getItem());
+        InventorySlotType slot = inventory.getItemSlotType(this.getItem());
 
         Durability durability = new Durability(this.i);
         durability.adjustDurability(this.damage * -1);
 
         this.i = durability.getItem();
 
-        inventory.setSlot(slot, i);
+        inventory.setSlotItem(slot, i);
 
-        if(durability.getStatus() != Durability.Status.EMPTY)
+        if(durability.getStatus() != DurabilityStatus.EMPTY)
         {
             this.cancel = true;
         } else {
@@ -92,9 +93,9 @@ public class PlayerDurability {
     {
         PlayerInventory inventory = new PlayerInventory(this.player);
 
-        Inventory.SlotType slot = inventory.getSlotType(this.getItem());
+        InventorySlotType slot = inventory.getItemSlotType(this.getItem());
 
-        inventory.setSlot(slot, null);
+        inventory.setSlotItem(slot, null);
 
         this.getPlayer().playSound(this.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1F, 1F);
     }
