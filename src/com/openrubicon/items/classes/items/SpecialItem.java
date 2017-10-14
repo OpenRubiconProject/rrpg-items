@@ -1,7 +1,6 @@
 package com.openrubicon.items.classes.items;
 
 import com.openrubicon.core.api.clone.Cloner;
-import com.openrubicon.core.api.clone.interfaces.DeepCloneable;
 import com.openrubicon.core.api.interfaces.*;
 import com.openrubicon.core.api.nbt.NBT;
 import com.openrubicon.core.api.vault.items.Items;
@@ -18,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class SpecialItem<T extends SpecialItem> implements Persistable, Observeable, Loreable, Generatable, DeepCloneable<T> {
+public class SpecialItem implements Persistable, Observeable, Loreable, Generatable {
 
     public static final String SPECIAL_ITEM = "RubiconSpecialItem";
 
@@ -40,6 +39,27 @@ public class SpecialItem<T extends SpecialItem> implements Persistable, Observea
 
     private boolean specialItem = true;
 
+    private boolean rightItemType = true;
+
+    public SpecialItem() {
+    }
+
+    public SpecialItem(SpecialItem oldSpecialItem) {
+        Cloner cloner = new Cloner();
+
+        this.item = new ItemStack(oldSpecialItem.getItem().getType());
+
+        this.nbt = new NBT(this.item);
+
+        this.uuid = UUID.randomUUID();
+
+        this.itemProperties = cloner.deepClone(oldSpecialItem.getItemProperties());
+
+        this.itemSpecs = cloner.deepClone(oldSpecialItem.getItemSpecs());
+
+        rarity = RarityFactory.make((int)itemSpecs.getRarity());
+    }
+
     public SpecialItem(ItemStack item) {
         this.item = item;
         this.load();
@@ -55,12 +75,24 @@ public class SpecialItem<T extends SpecialItem> implements Persistable, Observea
         return item;
     }
 
+    public void setItem(ItemStack item) {
+        this.item = item;
+    }
+
     public NBT getNbt() {
         return nbt;
     }
 
+    public ItemProperties getItemProperties() {
+        return itemProperties;
+    }
+
     public ItemSpecs getItemSpecs() {
         return itemSpecs;
+    }
+
+    public void setItemSpecs(ItemSpecs itemSpecs) {
+        this.itemSpecs = itemSpecs;
     }
 
     public Rarity getRarity() {
@@ -84,6 +116,14 @@ public class SpecialItem<T extends SpecialItem> implements Persistable, Observea
         return specialItem;
     }
 
+    public boolean isRightItemType() {
+        return rightItemType;
+    }
+
+    public void setRightItemType(boolean rightItemType) {
+        this.rightItemType = rightItemType;
+    }
+
     @Override
     public boolean generate()
     {
@@ -99,8 +139,6 @@ public class SpecialItem<T extends SpecialItem> implements Persistable, Observea
             itemSpecs = ItemSpecsFactory.generateSpecs();
 
         rarity = RarityFactory.make((int)itemSpecs.getRarity());
-
-        this.initializeItemMeta();
 
         return true;
     }
@@ -135,6 +173,12 @@ public class SpecialItem<T extends SpecialItem> implements Persistable, Observea
 
         this.nbt = new NBT(this.item);
 
+        if(!this.nbt.hasKey(ItemProperties.NBT_PROPERTIES))
+        {
+            this.specialItem = false;
+            return false;
+        }
+
         this.itemProperties.setPersistenceString(this.nbt.getString(ItemProperties.NBT_PROPERTIES));
 
         this.itemProperties.load();
@@ -144,7 +188,6 @@ public class SpecialItem<T extends SpecialItem> implements Persistable, Observea
             this.specialItem = false;
             return false;
         }
-
 
         this.uuid = UUID.fromString(this.itemProperties.get(Constants.UUID));
 
@@ -161,6 +204,7 @@ public class SpecialItem<T extends SpecialItem> implements Persistable, Observea
         String[] s = Items.itemNameByType(this.item.getType()).split(" ");
         meta.setDisplayName(Helpers.colorize(this.getRarity().getColor() + this.getRarity().getName() + " " + s[s.length - 1]));
         meta.setLore(this.getLore());
+        this.item.setItemMeta(meta);
     }
 
     @Override
@@ -195,16 +239,6 @@ public class SpecialItem<T extends SpecialItem> implements Persistable, Observea
 
     public float getCostModifier()
     {
-        return 1.0f;
-    }
-
-    @Override
-    public T deepClone() {
-        Cloner cloner = new Cloner();
-
-        T clonedItem = (T)cloner.deepClone(this);
-        clonedItem.setUuid(UUID.randomUUID());
-
-        return clonedItem;
+        return this.getRarity().getCostModifier();
     }
 }

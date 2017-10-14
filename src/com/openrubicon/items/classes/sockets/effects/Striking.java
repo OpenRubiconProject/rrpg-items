@@ -1,6 +1,6 @@
 package com.openrubicon.items.classes.sockets.effects;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.RRPGItems;
 import com.openrubicon.items.classes.items.SpecialItem;
@@ -66,7 +66,7 @@ public class Striking extends Socket {
     }
 
     @Override
-    public void onEntityDeath(EntityDeathEvent e, SpecialItem item, InventorySlotType slot)
+    public void onEntityDeath(EntityDeathEvent e, SpecialItem item, EntityInventorySlotType slot)
     {
         if(e.getEntity().getKiller() == null)
             return;

@@ -1,6 +1,6 @@
 package com.openrubicon.items.classes.sockets.effects;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.events.PlayerStandingStillEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
@@ -43,7 +43,7 @@ public class Bandage extends Socket {
         super.generate();
 
         double min = 1;
-        double max = (this.getItemSpecs().getPower() + 1) / 2;
+        double max = ((this.getItemSpecs().getPower() + 1) / 2)+0.1;
         rate = Helpers.randomDouble(min, max);
 
         return true;
@@ -67,7 +67,7 @@ public class Bandage extends Socket {
 
 
     @Override
-    public void onPlayerStandingStill(PlayerStandingStillEvent e, SpecialItem item, InventorySlotType slot)
+    public void onPlayerStandingStill(PlayerStandingStillEvent e, SpecialItem item, EntityInventorySlotType slot)
     {
         Player p = e.getPlayer();
 

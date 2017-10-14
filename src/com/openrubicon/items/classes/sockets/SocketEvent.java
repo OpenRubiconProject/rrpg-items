@@ -1,7 +1,7 @@
 package com.openrubicon.items.classes.sockets;
 
 import com.openrubicon.core.api.enums.EventType;
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.events.PlayerLandOnGroundEvent;
 import com.openrubicon.core.events.PlayerMovedLocationEvent;
 import com.openrubicon.core.events.PlayerStandingStillEvent;
@@ -29,22 +29,22 @@ public class SocketEvent {
         SpecialItem boots = new SpecialItem(player.getInventory().getBoots());
 
         if(offhand.isValid() && offhand.isSpecialItem())
-            SocketEvent.handler(offhand, type, e, InventorySlotType.OFFHAND);
+            SocketEvent.handler(offhand, type, e, EntityInventorySlotType.OFFHAND);
 
         if(mainhand.isValid() && mainhand.isSpecialItem())
-            SocketEvent.handler(mainhand, type, e, InventorySlotType.MAINHAND);
+            SocketEvent.handler(mainhand, type, e, EntityInventorySlotType.MAINHAND);
 
         if(helmet.isValid() && helmet.isSpecialItem())
-            SocketEvent.handler(helmet, type, e, InventorySlotType.HELMET);
+            SocketEvent.handler(helmet, type, e, EntityInventorySlotType.HELMET);
 
         if(chestplate.isValid() && chestplate.isSpecialItem())
-            SocketEvent.handler(chestplate, type, e, InventorySlotType.CHESTPLATE);
+            SocketEvent.handler(chestplate, type, e, EntityInventorySlotType.CHESTPLATE);
 
         if(leggings.isValid() && leggings.isSpecialItem())
-            SocketEvent.handler(leggings, type, e, InventorySlotType.LEGGINGS);
+            SocketEvent.handler(leggings, type, e, EntityInventorySlotType.LEGGINGS);
 
         if(boots.isValid() && boots.isSpecialItem())
-            SocketEvent.handler(boots, type, e, InventorySlotType.BOOTS);
+            SocketEvent.handler(boots, type, e, EntityInventorySlotType.BOOTS);
 
     }
 
@@ -58,26 +58,26 @@ public class SocketEvent {
         SpecialItem boots = new SpecialItem(entity.getEquipment().getBoots());
 
         if(offhand.isValid() && offhand.isSpecialItem())
-            SocketEvent.handler(offhand, type, e, InventorySlotType.OFFHAND);
+            SocketEvent.handler(offhand, type, e, EntityInventorySlotType.OFFHAND);
 
         if(mainhand.isValid() && mainhand.isSpecialItem())
-            SocketEvent.handler(mainhand, type, e, InventorySlotType.MAINHAND);
+            SocketEvent.handler(mainhand, type, e, EntityInventorySlotType.MAINHAND);
 
         if(helmet.isValid() && helmet.isSpecialItem())
-            SocketEvent.handler(helmet, type, e, InventorySlotType.HELMET);
+            SocketEvent.handler(helmet, type, e, EntityInventorySlotType.HELMET);
 
         if(chestplate.isValid() && chestplate.isSpecialItem())
-            SocketEvent.handler(chestplate, type, e, InventorySlotType.CHESTPLATE);
+            SocketEvent.handler(chestplate, type, e, EntityInventorySlotType.CHESTPLATE);
 
         if(leggings.isValid() && leggings.isSpecialItem())
-            SocketEvent.handler(leggings, type, e, InventorySlotType.LEGGINGS);
+            SocketEvent.handler(leggings, type, e, EntityInventorySlotType.LEGGINGS);
 
         if(boots.isValid() && boots.isSpecialItem())
-            SocketEvent.handler(boots, type, e, InventorySlotType.BOOTS);
+            SocketEvent.handler(boots, type, e, EntityInventorySlotType.BOOTS);
 
     }
 
-    public static void handler(SpecialItem item, EventType type, Event e, InventorySlotType slot)
+    public static void handler(SpecialItem item, EventType type, Event e, EntityInventorySlotType slot)
     {
         if(!item.isSpecialItem() || !item.isValid() || !(item instanceof Socketable))
             return;

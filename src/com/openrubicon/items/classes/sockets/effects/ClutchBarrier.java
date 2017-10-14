@@ -1,6 +1,6 @@
 package com.openrubicon.items.classes.sockets.effects;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.items.SpecialItem;
@@ -73,7 +73,7 @@ public class ClutchBarrier extends CooldownSocket {
     }
 
     @Override
-    public void onEntityDamage(EntityDamageEvent e, SpecialItem item, InventorySlotType slot) {
+    public void onEntityDamage(EntityDamageEvent e, SpecialItem item, EntityInventorySlotType slot) {
         if(this.isOnCooldown())
             return;
 

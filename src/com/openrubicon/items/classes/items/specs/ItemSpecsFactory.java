@@ -1,13 +1,11 @@
 package com.openrubicon.items.classes.items.specs;
 
 import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.items.helpers.Constants;
 
 public class ItemSpecsFactory {
 
-    private static final float SPREAD = 1;
-    private static final int MAX_SOCKETS = 11;
-    private static final int MAX_RARITY = 11;
-    private static final int MAX_POWER = 11;
+
 
     public static ItemSpecs generateSpecs()
     {
@@ -20,12 +18,12 @@ public class ItemSpecsFactory {
             {
                 for (int k = 11; k > 0; k--)
                 {
-                    double calc = (int)Math.pow(i * j * k, SPREAD);
+                    double calc = (int)Math.pow(i * j * k, Constants.SPREAD);
                     type -= calc;
                     if (type <= 0)
                     {
-                        int durability = (int)calculateDurability(MAX_RARITY + 1 - i, MAX_POWER + 1 - j, MAX_SOCKETS + 1 - k);
-                        return new ItemSpecs(MAX_RARITY + 1 - i, MAX_SOCKETS + 1 - k, MAX_POWER + 1 - j, calculateAttributePoints(MAX_RARITY + 1 - i, MAX_POWER + 1 - j), durability, durability, total(), bg);
+                        int durability = (int)calculateDurability(Constants.MAX_RARITY + 1 - i, Constants.MAX_POWER + 1 - j, Constants.MAX_SOCKETS + 1 - k);
+                        return new ItemSpecs(Constants.MAX_RARITY + 1 - i, Constants.MAX_SOCKETS + 1 - k, Constants.MAX_POWER + 1 - j, calculateAttributePoints(Constants.MAX_RARITY + 1 - i, Constants.MAX_POWER + 1 - j), durability, durability, total(), bg);
                     }
                 }
             }
@@ -39,13 +37,13 @@ public class ItemSpecsFactory {
     {
         double total = 0;
 
-        for (int i = MAX_RARITY; i > 0; i--)
+        for (int i = Constants.MAX_RARITY; i > 0; i--)
         {
-            for (int j = MAX_POWER; j > 0; j--)
+            for (int j = Constants.MAX_POWER; j > 0; j--)
             {
-                for (int k = MAX_SOCKETS; k > 0; k--)
+                for (int k = Constants.MAX_SOCKETS; k > 0; k--)
                 {
-                    total += Math.pow(i * j * k, SPREAD);
+                    total += Math.pow(i * j * k, Constants.SPREAD);
                 }
             }
         }
@@ -56,21 +54,6 @@ public class ItemSpecsFactory {
     private static double randomIndex()
     {
         return (int)(Helpers.randomDouble(1, total()));
-    }
-
-    private static boolean socketObfuscated(ItemSpecs specs)
-    {
-        int max = (int)(specs.getRarity() * 2 - specs.getSockets());
-        if(max < 3)
-            max = 3;
-        int min = 1;
-
-        int chance = Helpers.randomInt(min, max);
-
-        if(chance == min)
-            return true;
-
-        return false;
     }
 
     private static int calculateAttributePoints(double rarity, double power)
@@ -86,18 +69,34 @@ public class ItemSpecsFactory {
     private static double calculateDurability(double rarity, double power, double sockets)
     {
         //double rChance = (r.nextInt(20 + 1) + 10) / 100.00;
-        double rChance = Helpers.randomDouble(10, 41) / 100;
-        double mod = Helpers.randomDouble(MAX_RARITY / 2 + 5, (MAX_RARITY / 2) + rarity + 5);
-        double exponent = rChance * (power + rarity) / ((sockets + MAX_SOCKETS) / mod);
+        double rarityFactor = Helpers.scale(rarity, 1, 11, 1, 5);
+        double powerFactor = Helpers.scale(rarity, 1, 11, 1, 5);
+
+        double totalAttribs = rarity + (rarity / 2) + (power / 2) - sockets;
+        if(totalAttribs < 1)
+            totalAttribs = 1;
+
+        double combinedFactor = Helpers.scale(totalAttribs, 1, Constants.MAX_POWER + Constants.MAX_RARITY - 1, 2.5, 5.75);
+        double rCombinedFactor = Helpers.randomDouble(2, combinedFactor + 1);
+
+        double rChance = Helpers.randomDouble(10, 22) / 100;
+        double mod = Helpers.randomDouble(Constants.MAX_RARITY / 2 + 7, (Constants.MAX_RARITY / 2) + rarity + 7);
+        double exponent = rChance * (powerFactor + rarity) / ((sockets + Constants.MAX_SOCKETS) / mod);
+
         if(exponent < 0.5)
             exponent = 0.5;
         if(exponent > 10)
             exponent = 10;
-        double base = 50 / (MAX_RARITY + 1 - rarity);
 
-        base = Math.pow(Helpers.randomDouble(base, base * 1.5), exponent);
+        exponent = Helpers.scale(exponent, 0.5, 10, 1.75, 2.92);
 
-        return base;
+        double base = (20.7 * rarityFactor) / ((Constants.MAX_RARITY + 1 - rarity) * 2 / 3);
+
+        double value = Math.pow(Helpers.randomDouble(base, base * 1.32), exponent);
+
+        value *= rCombinedFactor;
+
+        return value;
     }
 
 }

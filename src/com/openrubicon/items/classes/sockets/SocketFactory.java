@@ -1,6 +1,7 @@
 package com.openrubicon.items.classes.sockets;
 
 import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.items.classes.items.specs.ItemSpecs;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -37,6 +38,21 @@ public class SocketFactory {
             return Helpers.cloner.deepClone(SocketProvider.getSockets().get(key));
 
         return null;
+    }
+
+    public static boolean socketObfuscated(ItemSpecs specs)
+    {
+        int max = (int)(specs.getRarity() * 2 - specs.getSockets());
+        if(max < 3)
+            max = 3;
+        int min = 1;
+
+        int chance = Helpers.randomInt(min, max);
+
+        if(chance == min)
+            return true;
+
+        return false;
     }
 
 }

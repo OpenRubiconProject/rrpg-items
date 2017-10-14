@@ -1,6 +1,6 @@
 package com.openrubicon.items.classes.sockets.effects;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.RRPGItems;
 import com.openrubicon.items.classes.items.SpecialItem;
@@ -18,7 +18,7 @@ public class Martyrdom extends Socket {
 
     @Override
     public String getKey() {
-        return "bounce";
+        return "martydom";
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Martyrdom extends Socket {
 
     @Override
     public String getName() {
-        return "Bounce";
+        return "Martydom";
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Martyrdom extends Socket {
     }
 
     @Override
-    public void onEntityDeath(EntityDeathEvent e, SpecialItem item, InventorySlotType slot)
+    public void onEntityDeath(EntityDeathEvent e, SpecialItem item, EntityInventorySlotType slot)
     {
         Location location = e.getEntity().getLocation();
 

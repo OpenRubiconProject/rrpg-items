@@ -9,13 +9,14 @@ import com.openrubicon.core.api.nbt.NBT;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.classes.items.interfaces.Socketable;
 import com.openrubicon.items.classes.items.specs.ItemSpecs;
+import de.tr7zw.itemnbtapi.NBTCompound;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-public class SocketHandler implements Persistable, Loreable, Observeable, Generatable{
+public class SocketHandler implements Persistable, Loreable, Observeable, Generatable {
 
     private LinkedHashMap<String, Socket> sockets = new LinkedHashMap<>();
 
@@ -59,6 +60,7 @@ public class SocketHandler implements Persistable, Loreable, Observeable, Genera
         for(int z = 0; z < this.getItemSpecs().getSockets(); z++)
         {
             Socket socket = SocketFactory.random(this.item.getType());
+            socket.setItemSpecs(this.getItemSpecs());
             if(socket == null)
                 continue;
             if(!socket.generate())
@@ -73,7 +75,10 @@ public class SocketHandler implements Persistable, Loreable, Observeable, Genera
         ArrayList<String> lore = new ArrayList<>();
         for(Socket socket : sockets.values())
         {
-            lore.addAll(socket.getLore());
+            if(socket.isObfuscated())
+                lore.add("#####");
+            else
+                lore.addAll(socket.getLore());
         }
         return Helpers.colorize(lore);
     }
@@ -95,7 +100,7 @@ public class SocketHandler implements Persistable, Loreable, Observeable, Genera
     @Override
     public boolean save()
     {
-        Compound socketComp = this.nbt.addCompound(Socketable.SOCKETS);
+        NBTCompound socketComp = this.nbt.addCompound(Socketable.SOCKETS);
 
         int count = 0;
         for(Socket socket : sockets.values())
@@ -110,7 +115,7 @@ public class SocketHandler implements Persistable, Loreable, Observeable, Genera
 
     @Override
     public boolean load() {
-        Compound socketComp = this.nbt.getCompound(Socketable.SOCKETS);
+        NBTCompound socketComp = this.nbt.getCompound(Socketable.SOCKETS);
 
         Set<String> sockets = socketComp.getKeys();
 

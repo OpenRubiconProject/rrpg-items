@@ -1,6 +1,6 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.events.PlayerLandOnGroundEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
@@ -69,7 +69,7 @@ public class GroundPound extends Socket {
 
 
     @Override
-    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, SpecialItem item, InventorySlotType slot)
+    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, SpecialItem item, EntityInventorySlotType slot)
     {
         Player p = e.getPlayer();
 

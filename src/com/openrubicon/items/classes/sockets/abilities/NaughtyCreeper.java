@@ -1,6 +1,6 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.sockets.Socket;
@@ -56,7 +56,7 @@ public class NaughtyCreeper extends Socket {
 
 
     @Override
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, SpecialItem item, InventorySlotType slot)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, SpecialItem item, EntityInventorySlotType slot)
     {
         if(e.getDamager() instanceof Player && e.getEntity() instanceof Creeper)
         {

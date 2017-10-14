@@ -1,6 +1,6 @@
 package com.openrubicon.items.classes.sockets.effects;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.events.PlayerMovedLocationEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
@@ -63,7 +63,7 @@ public class MarathonRunner extends Socket {
     }
 
     @Override
-    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, SpecialItem item, InventorySlotType slot) {
+    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, SpecialItem item, EntityInventorySlotType slot) {
         Player p = e.getPlayer();
 
         double amount = Helpers.getDistance(e.getPreviousLocation(), e.getNewLocation());

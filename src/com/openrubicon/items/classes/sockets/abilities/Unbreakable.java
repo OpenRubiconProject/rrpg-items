@@ -1,7 +1,7 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
-import com.openrubicon.core.api.inventory.PlayerInventory;
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.PlayerInventory;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.items.SpecialItem;
@@ -38,15 +38,15 @@ public class Unbreakable extends Socket {
     }
 
     @Override
-    public void onPlayerItemDamage(PlayerItemDamageEvent e, SpecialItem item, InventorySlotType slot)
+    public void onPlayerItemDamage(PlayerItemDamageEvent e, SpecialItem item, EntityInventorySlotType slot)
     {
         if(!item.isSpecialItem())
             return;
 
-        int itemDurability = (int) Helpers.scale(0, 0, item.getStats().getItem().getMaxDurability(), 0, item.getItem().getType().getMaxDurability());
+        int itemDurability = (int) Helpers.scale(0, 0, item.getItemSpecs().getDurabilityMax(), 0, item.getItem().getType().getMaxDurability());
         int adjustedDurability = item.getItem().getType().getMaxDurability() - itemDurability;
 
-        item.getStats().getItem().setCurrentDurability(-1);
+        item.getItemSpecs().setDurabilityCurrent(-1);
 
         item.save();
 

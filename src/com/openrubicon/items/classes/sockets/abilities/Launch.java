@@ -1,6 +1,6 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.items.SpecialItem;
@@ -74,7 +74,7 @@ public class Launch extends Socket {
 
 
     @Override
-    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, InventorySlotType slot)
+    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, EntityInventorySlotType slot)
     {
         if((e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) || !e.getPlayer().isSneaking())
             return;

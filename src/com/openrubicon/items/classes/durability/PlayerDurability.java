@@ -1,7 +1,7 @@
 package com.openrubicon.items.classes.durability;
 
-import com.openrubicon.core.api.inventory.PlayerInventory;
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.PlayerInventory;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.items.classes.durability.enums.DurabilityStatus;
 import com.openrubicon.items.classes.items.SpecialItem;
 import org.bukkit.Sound;
@@ -71,7 +71,7 @@ public class PlayerDurability {
 
         PlayerInventory inventory = new PlayerInventory(this.player);
 
-        InventorySlotType slot = inventory.getItemSlotType(this.getItem());
+        EntityInventorySlotType slot = inventory.getItemSlotType(this.getItem());
 
         Durability durability = new Durability(this.i);
         durability.adjustDurability(this.damage * -1);
@@ -93,7 +93,7 @@ public class PlayerDurability {
     {
         PlayerInventory inventory = new PlayerInventory(this.player);
 
-        InventorySlotType slot = inventory.getItemSlotType(this.getItem());
+        EntityInventorySlotType slot = inventory.getItemSlotType(this.getItem());
 
         inventory.setSlotItem(slot, null);
 

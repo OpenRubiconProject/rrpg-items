@@ -1,7 +1,7 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
-import com.openrubicon.core.api.inventory.PlayerInventory;
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.PlayerInventory;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
@@ -18,7 +18,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Sapling;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class TreeHugger extends Socket {
@@ -73,7 +72,7 @@ public class TreeHugger extends Socket {
 
 
     @Override
-    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, InventorySlotType slot)
+    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, EntityInventorySlotType slot)
     {
         if(e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking())
             return;
