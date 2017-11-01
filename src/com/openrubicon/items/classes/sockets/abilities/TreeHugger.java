@@ -6,7 +6,7 @@ import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.durability.Durability;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -72,7 +72,7 @@ public class TreeHugger extends Socket {
 
 
     @Override
-    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, EntityInventorySlotType slot)
+    public void onPlayerInteract(PlayerInteractEvent e, UniqueItem item, EntityInventorySlotType slot)
     {
         if(e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking())
             return;

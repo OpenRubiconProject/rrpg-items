@@ -1,5 +1,6 @@
 package com.openrubicon.items.classes.sockets;
 
+import com.openrubicon.core.api.services.interfaces.Service;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
-public class SocketProvider {
+public class SocketProvider implements Service {
 
     protected static LinkedHashMap<String, Socket> sockets = new LinkedHashMap<>();
 
@@ -16,7 +17,7 @@ public class SocketProvider {
         return SocketProvider.sockets;
     }
 
-    public static void add(Socket socket)
+    public void add(Socket socket)
     {
         if(!SocketProvider.sockets.containsKey(socket.getKey()))
         {
@@ -26,21 +27,21 @@ public class SocketProvider {
         }
     }
 
-    public static void addAll(HashSet<Socket> sockets)
+    public void addAll(HashSet<Socket> sockets)
     {
         for(Socket socket : sockets)
         {
-            SocketProvider.add(socket);
+            this.add(socket);
         }
     }
 
-    public static void remove(Socket socket)
+    public void remove(Socket socket)
     {
         if(SocketProvider.getSockets().containsKey(socket.getKey()))
             SocketProvider.getSockets().remove(socket.getKey());
     }
 
-    public static Socket get(int index)
+    public Socket get(int index)
     {
         if((index + 1) > SocketProvider.getSockets().size())
             return null;
@@ -51,12 +52,12 @@ public class SocketProvider {
         return sockets.get(index);
     }
 
-    public static void clear()
+    public void clear()
     {
         SocketProvider.sockets.clear();
     }
 
-    public static ArrayList<Socket> getValidSockets(Material material)
+    public ArrayList<Socket> getValidSockets(Material material)
     {
         ArrayList<Socket> validSockets = new ArrayList<>();
         for(Socket socket : SocketProvider.getSockets().values())

@@ -4,7 +4,7 @@ import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType
 import com.openrubicon.core.events.PlayerMovedLocationEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -40,7 +40,11 @@ public class MarathonRunner extends Socket {
         super.generate();
 
         double min = this.getItemSpecs().getPower() / 2.;
+        if(min < 1)
+            min = 1;
         double max = this.getItemSpecs().getPower();
+        if(max < 2)
+            max = 2;
         rate = Helpers.randomDouble(min, max);
 
         return true;
@@ -63,15 +67,15 @@ public class MarathonRunner extends Socket {
     }
 
     @Override
-    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, SpecialItem item, EntityInventorySlotType slot) {
-        Player p = e.getPlayer();
+    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, UniqueItem item, EntityInventorySlotType slot) {
+                Player p = e.getPlayer();
 
         double amount = Helpers.getDistance(e.getPreviousLocation(), e.getNewLocation());
 
         if(amount < 1)
             amount = 1;
 
-        int chance = Helpers.rng.nextInt(100 + p.getLevel());
+        int chance = Helpers.rng.nextInt(1 + (int)(Math.pow(p.getLevel(), 1.65)));
 
         if(chance <= this.rate)
             p.giveExp((int)amount);

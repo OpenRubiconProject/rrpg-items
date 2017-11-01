@@ -11,6 +11,7 @@ import com.openrubicon.core.rarity.RarityFactory;
 import com.openrubicon.items.classes.items.nbt.ItemProperties;
 import com.openrubicon.items.classes.items.specs.ItemSpecs;
 import com.openrubicon.items.classes.items.specs.ItemSpecsFactory;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -35,6 +36,8 @@ public class SpecialItem implements Persistable, Observeable, Loreable, Generata
 
     private UUID uuid;
 
+    private LivingEntity whoCurrentlyHas;
+
     private boolean validItem = true;
 
     private boolean specialItem = true;
@@ -52,6 +55,8 @@ public class SpecialItem implements Persistable, Observeable, Loreable, Generata
         this.nbt = new NBT(this.item);
 
         this.uuid = UUID.randomUUID();
+
+        this.whoCurrentlyHas = oldSpecialItem.getWhoCurrentlyHas();
 
         this.itemProperties = cloner.deepClone(oldSpecialItem.getItemProperties());
 
@@ -106,6 +111,14 @@ public class SpecialItem implements Persistable, Observeable, Loreable, Generata
     protected void setUuid(UUID uuid)
     {
         this.uuid = uuid;
+    }
+
+    public LivingEntity getWhoCurrentlyHas() {
+        return whoCurrentlyHas;
+    }
+
+    public void setWhoCurrentlyHas(LivingEntity whoCurrentlyHas) {
+        this.whoCurrentlyHas = whoCurrentlyHas;
     }
 
     public boolean isValid() {
@@ -227,11 +240,11 @@ public class SpecialItem implements Persistable, Observeable, Loreable, Generata
         ArrayList<String> view = new ArrayList<>();
 
         if(this.specialItem) {
-            view.add("&6Core Stats");
-
-            view.addAll(this.rarity.getObservation());
             view.add("");
+            view.add("&6Core Stats");
             view.addAll(this.getItemSpecs().getObservation());
+            view.add("");
+            view.addAll(this.rarity.getObservation());
         }
 
         return Helpers.colorize(view);

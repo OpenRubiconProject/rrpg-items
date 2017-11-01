@@ -4,7 +4,7 @@ import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType
 import com.openrubicon.core.events.PlayerLandOnGroundEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -67,7 +67,7 @@ public class Bounce extends Socket {
     }
 
     @Override
-    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, SpecialItem item, EntityInventorySlotType slot)
+    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, UniqueItem item, EntityInventorySlotType slot)
     {
         Player p = e.getPlayer();
 

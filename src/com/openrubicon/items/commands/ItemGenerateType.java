@@ -4,20 +4,20 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.interactables.Player;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.vault.items.Items;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
-import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public class ItemGenerate extends Command {
+public class ItemGenerateType extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "item generate";
+        return "item generate type $";
     }
 
     @Override
@@ -32,13 +32,13 @@ public class ItemGenerate extends Command {
     public void handle(Interactable interactable, String[] strings) {
         org.bukkit.entity.Player player = ((Player)interactable).getPlayer();
 
-        int choice = Helpers.rng.nextInt(MaterialGroups.GENERATABLE.size());
-        ArrayList<Material> materials = new ArrayList<>();
-        materials.addAll(MaterialGroups.GENERATABLE);
+        Material material = Items.itemMaterialByName(strings[0]);
+        if(material == null)
+            return;
 
-        ItemStack i = new ItemStack(materials.get(choice));
+        ItemStack item = new ItemStack(material);
 
-        UniqueItem uniqueItem = new UniqueItem(i, false);
+        UniqueItem uniqueItem = new UniqueItem(item, false);
         uniqueItem.generate();
         uniqueItem.save();
         player.getInventory().addItem(uniqueItem.getItem());

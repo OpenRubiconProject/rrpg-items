@@ -7,17 +7,19 @@ import com.openrubicon.core.api.interactables.interfaces.Interactable;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.items.specs.ItemSpecs;
+import com.openrubicon.items.classes.items.specs.ItemSpecsFactory;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public class ItemGenerate extends Command {
+public class ItemGenerateWithCoreSpecs extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "item generate";
+        return "item generate specs $ $ $";
     }
 
     @Override
@@ -32,6 +34,12 @@ public class ItemGenerate extends Command {
     public void handle(Interactable interactable, String[] strings) {
         org.bukkit.entity.Player player = ((Player)interactable).getPlayer();
 
+        double rarity = Integer.parseInt(strings[0]);
+        double sockets = Integer.parseInt(strings[1]);
+        double power = Integer.parseInt(strings[2]);
+
+        ItemSpecs itemSpecs = ItemSpecsFactory.generateFromCoreValues(rarity, sockets, power);
+
         int choice = Helpers.rng.nextInt(MaterialGroups.GENERATABLE.size());
         ArrayList<Material> materials = new ArrayList<>();
         materials.addAll(MaterialGroups.GENERATABLE);
@@ -39,6 +47,7 @@ public class ItemGenerate extends Command {
         ItemStack i = new ItemStack(materials.get(choice));
 
         UniqueItem uniqueItem = new UniqueItem(i, false);
+        uniqueItem.setItemSpecs(itemSpecs);
         uniqueItem.generate();
         uniqueItem.save();
         player.getInventory().addItem(uniqueItem.getItem());

@@ -142,15 +142,6 @@ public class UniqueItem extends SpecialItem {
     public ArrayList<String> getObservation() {
         ArrayList<String> observation = super.getObservation();
         if(this.isSpecialItem()) {
-            observation.add(Helpers.colorize("&6Core Stats"));
-
-            if (this.getRarity() == null)
-                return new ArrayList<>();
-
-            observation.addAll(this.getRarity().getObservation());
-            observation.add("");
-            observation.addAll(this.getRarity().getObservation());
-
             observation.add(Helpers.colorize(""));
             observation.add(Helpers.colorize("&6Stats"));
 

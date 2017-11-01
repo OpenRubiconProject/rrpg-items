@@ -1,8 +1,12 @@
 package com.openrubicon.items.classes.sockets.enchants;
 
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
+import com.openrubicon.items.classes.inventory.LivingEntityInventory;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.Socket;
+import com.openrubicon.items.classes.sockets.events.PrepareSocketCooldownEvent;
 import org.bukkit.Material;
 
 import java.util.HashSet;
@@ -41,7 +45,7 @@ public class Spam extends Socket {
         if(max <= min)
             max = 2 * min;
 
-        this.cdr = (int) Helpers.scale(Helpers.randomDouble(min, max), min, max, 1, 35);
+        this.cdr = (int) Helpers.scale(Helpers.randomDouble(min, max), min, max, 5, 35);
 
         if(this.cdr < 1)
             this.cdr = 1;
@@ -65,8 +69,20 @@ public class Spam extends Socket {
         return true;
     }
 
-
     public int getCdr() {
         return this.cdr;
+    }
+
+    @Override
+    public void onPrepareSocketCooldown(PrepareSocketCooldownEvent e, UniqueItem item, EntityInventorySlotType slot)
+    {
+        if(item.isSpecialItem() && item.isValid() && item.isRightItemType())
+        {
+            if(item.getSocketHandler().has(new Spam()))
+            {
+                Spam socket = (Spam)item.getSocketHandler().get(new Spam());
+                e.getCooldown().addCooldownReduction(socket.getCdr());
+            }
+        }
     }
 }

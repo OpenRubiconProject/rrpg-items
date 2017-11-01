@@ -3,7 +3,7 @@ package com.openrubicon.items.classes.sockets.abilities;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -75,7 +75,7 @@ public class RadialMark extends Socket {
     }
 
     @Override
-    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, EntityInventorySlotType slot)
+    public void onPlayerInteract(PlayerInteractEvent e, UniqueItem item, EntityInventorySlotType slot)
     {
         if((e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) || !e.getPlayer().isSneaking())
             return;

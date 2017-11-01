@@ -3,7 +3,7 @@ package com.openrubicon.items.classes.sockets.effects;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.CooldownSocket;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -73,7 +73,7 @@ public class ClutchBarrier extends CooldownSocket {
     }
 
     @Override
-    public void onEntityDamage(EntityDamageEvent e, SpecialItem item, EntityInventorySlotType slot) {
+    public void onEntityDamage(EntityDamageEvent e, UniqueItem item, EntityInventorySlotType slot) {
         if(this.isOnCooldown())
             return;
 
@@ -92,6 +92,6 @@ public class ClutchBarrier extends CooldownSocket {
         e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1f, 1f);
         e.getEntity().getWorld().spawnParticle(Particle.SPELL_INSTANT, e.getEntity().getLocation(), 50);
 
-        this.startCooldown();
+        this.startCooldown(entity, item);
     }
 }

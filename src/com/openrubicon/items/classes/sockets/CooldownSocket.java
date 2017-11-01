@@ -1,9 +1,21 @@
 package com.openrubicon.items.classes.sockets;
 
+import com.openrubicon.core.api.actionbar.ActionBarManager;
+import com.openrubicon.core.api.actionbar.ActionBarMessage;
 import com.openrubicon.core.api.cooldowns.interfaces.Cooldownable;
 import com.openrubicon.core.helpers.Constants;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
+import com.openrubicon.items.classes.sockets.cooldowns.LivingEntityCooldownSockets;
 import com.openrubicon.items.classes.sockets.cooldowns.SocketCooldown;
 import com.openrubicon.items.classes.sockets.cooldowns.SocketCooldownManager;
+import com.openrubicon.items.classes.sockets.events.PrepareSocketCooldownEvent;
+import com.openrubicon.items.classes.sockets.events.SocketCooldownStartedEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 abstract public class CooldownSocket extends Socket implements Cooldownable {
 
@@ -22,9 +34,14 @@ abstract public class CooldownSocket extends Socket implements Cooldownable {
     @Override
     public boolean load() {
         super.load();
-        this.cooldown = new SocketCooldown(this.getUuid().toString(), this.getKey());
-        this.cooldown.setLength(Integer.parseInt(this.getSocketProperties().get(Constants.COOLDOWN)));
-        SocketCooldownManager.add(this.cooldown);
+        if(SocketCooldownManager.has(new SocketCooldown(this.getUuid().toString(), this.getKey())))
+        {
+            this.cooldown = (SocketCooldown)SocketCooldownManager.get(new SocketCooldown(this.getUuid().toString(), this.getKey()).getId());
+        } else {
+            this.cooldown = new SocketCooldown(this.getUuid().toString(), this.getKey());
+            this.cooldown.setLength(Integer.parseInt(this.getSocketProperties().get(Constants.COOLDOWN)));
+            SocketCooldownManager.add(this.cooldown);
+        }
         return true;
     }
 
@@ -39,8 +56,61 @@ abstract public class CooldownSocket extends Socket implements Cooldownable {
 
     public void startCooldown()
     {
-        if(this.cooldown.isOnCooldown())
+        if(!this.cooldown.isOnCooldown())
+        {
             SocketCooldownManager.start(this.cooldown);
+        }
+
+    }
+
+    public void startCooldown(LivingEntity entity, UniqueItem item)
+    {
+        if(this.cooldown.isOnCooldown())
+           return;
+
+        /*LivingEntityInventory inventory = new LivingEntityInventory(entity);
+
+        int cdr = 0;
+        for(UniqueItem uniqueItem : inventory.getArmorWithSocket(new CooldownReduction()))
+        {
+            CooldownReduction socket = (CooldownReduction)item.getSocketHandler().get(new CooldownReduction());
+            cdr += socket.getCdr();
+        }
+
+        if(item.isSpecialItem() && item.isValid() && item.isRightItemType())
+        {
+            if(item.getSocketHandler().has(new Spam()))
+            {
+                Spam socket = (Spam)item.getSocketHandler().get(new Spam());
+                cdr += socket.getCdr();
+            }
+        }
+
+        this.cooldown.setCooldownReduction(cdr);*/
+
+        //Bukkit.broadcastMessage(entity.getName());
+
+        if(!SocketCooldownManager.getEntitiesSocketCooldowns().containsKey(entity))
+        {
+            //Bukkit.broadcastMessage("wtf");
+            SocketCooldownManager.getEntitiesSocketCooldowns().put(entity, new LivingEntityCooldownSockets());
+        }
+
+        if(!SocketCooldownManager.getEntitiesSocketCooldowns().get(entity).containsSocket(this.getUuid()))
+        {
+            //Bukkit.broadcastMessage("wtf2");
+            SocketCooldownManager.getEntitiesSocketCooldowns().get(entity).getSockets().add(this);
+            //Bukkit.broadcastMessage(SocketCooldownManager.getEntitySocketCooldowns(entity).size()+"");
+        }
+
+        //Bukkit.broadcastMessage(SocketCooldownManager.getEntitiesSocketCooldowns().get(entity).getSockets().size()+"");
+
+        Bukkit.getPluginManager().callEvent(new PrepareSocketCooldownEvent(cooldown, item, entity));
+
+        this.startCooldown();
+
+        Bukkit.getPluginManager().callEvent(new SocketCooldownStartedEvent(cooldown, item, entity));
+
     }
 
     public boolean isOnCooldown()
@@ -48,4 +118,20 @@ abstract public class CooldownSocket extends Socket implements Cooldownable {
         return this.cooldown.isOnCooldown();
     }
 
+    @Override
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<>();
+        String loreLine = Constants.PRIMARY_COLOR+this.getName();
+
+        if(this.isOnCooldown())
+        {
+            loreLine += Constants.PRIMARY_COLOR + " (" + Constants.RED + this.cooldown.getCurrent() / 20 + Constants.PRIMARY_COLOR + ")";
+        } else {
+            loreLine += " (" + this.cooldown.getCooldownLengthSeconds() + ")";
+        }
+
+
+        lore.add(Helpers.colorize(loreLine));
+        return lore;
+    }
 }

@@ -2,7 +2,7 @@ package com.openrubicon.items.classes.sockets.effects;
 
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -66,7 +66,7 @@ public class SteelFeet extends Socket {
 
 
     @Override
-    public void onEntityDamage(EntityDamageEvent e, SpecialItem item, EntityInventorySlotType slot)
+    public void onEntityDamage(EntityDamageEvent e, UniqueItem item, EntityInventorySlotType slot)
     {
         if(e.getCause() == EntityDamageEvent.DamageCause.FALL)
         {

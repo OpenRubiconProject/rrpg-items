@@ -1,12 +1,13 @@
 package com.openrubicon.items.classes.sockets;
 
-import com.openrubicon.core.api.enums.EventType;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.events.PlayerLandOnGroundEvent;
+import com.openrubicon.core.events.PlayerLookingAtEntityEvent;
 import com.openrubicon.core.events.PlayerMovedLocationEvent;
 import com.openrubicon.core.events.PlayerStandingStillEvent;
-import com.openrubicon.items.classes.items.SpecialItem;
-import com.openrubicon.items.classes.items.interfaces.Socketable;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
+import com.openrubicon.items.classes.sockets.events.PrepareSocketCooldownEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -17,106 +18,183 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class SocketEvent {
 
-    public static void handlePlayer(Player player, EventType type, Event e)
+    public static void handlePlayer(Player player, Event e)
     {
-        SpecialItem mainhand = new SpecialItem(player.getInventory().getItemInMainHand());
-        SpecialItem offhand = new SpecialItem(player.getInventory().getItemInOffHand());
-        SpecialItem helmet = new SpecialItem(player.getInventory().getHelmet());
-        SpecialItem chestplate = new SpecialItem(player.getInventory().getChestplate());
-        SpecialItem leggings = new SpecialItem(player.getInventory().getLeggings());
-        SpecialItem boots = new SpecialItem(player.getInventory().getBoots());
+        UniqueItem mainhand = new UniqueItem(player.getInventory().getItemInMainHand());
+        UniqueItem offhand = new UniqueItem(player.getInventory().getItemInOffHand());
+        UniqueItem helmet = new UniqueItem(player.getInventory().getHelmet());
+        UniqueItem chestplate = new UniqueItem(player.getInventory().getChestplate());
+        UniqueItem leggings = new UniqueItem(player.getInventory().getLeggings());
+        UniqueItem boots = new UniqueItem(player.getInventory().getBoots());
 
         if(offhand.isValid() && offhand.isSpecialItem())
-            SocketEvent.handler(offhand, type, e, EntityInventorySlotType.OFFHAND);
+            SocketEvent.handler(offhand, e, EntityInventorySlotType.OFFHAND);
 
         if(mainhand.isValid() && mainhand.isSpecialItem())
-            SocketEvent.handler(mainhand, type, e, EntityInventorySlotType.MAINHAND);
+            SocketEvent.handler(mainhand, e, EntityInventorySlotType.MAINHAND);
 
         if(helmet.isValid() && helmet.isSpecialItem())
-            SocketEvent.handler(helmet, type, e, EntityInventorySlotType.HELMET);
+            SocketEvent.handler(helmet, e, EntityInventorySlotType.HELMET);
 
         if(chestplate.isValid() && chestplate.isSpecialItem())
-            SocketEvent.handler(chestplate, type, e, EntityInventorySlotType.CHESTPLATE);
+            SocketEvent.handler(chestplate, e, EntityInventorySlotType.CHESTPLATE);
 
         if(leggings.isValid() && leggings.isSpecialItem())
-            SocketEvent.handler(leggings, type, e, EntityInventorySlotType.LEGGINGS);
+            SocketEvent.handler(leggings, e, EntityInventorySlotType.LEGGINGS);
 
         if(boots.isValid() && boots.isSpecialItem())
-            SocketEvent.handler(boots, type, e, EntityInventorySlotType.BOOTS);
+            SocketEvent.handler(boots, e, EntityInventorySlotType.BOOTS);
 
     }
 
-    public static void handleLivingEntity(LivingEntity entity, EventType type, Event e)
+    public static void handleLivingEntity(LivingEntity entity, Event e)
     {
-        SpecialItem mainhand = new SpecialItem(entity.getEquipment().getItemInMainHand());
-        SpecialItem offhand = new SpecialItem(entity.getEquipment().getItemInOffHand());
-        SpecialItem helmet = new SpecialItem(entity.getEquipment().getHelmet());
-        SpecialItem chestplate = new SpecialItem(entity.getEquipment().getChestplate());
-        SpecialItem leggings = new SpecialItem(entity.getEquipment().getLeggings());
-        SpecialItem boots = new SpecialItem(entity.getEquipment().getBoots());
+        UniqueItem mainhand = new UniqueItem(entity.getEquipment().getItemInMainHand());
+        UniqueItem offhand = new UniqueItem(entity.getEquipment().getItemInOffHand());
+        UniqueItem helmet = new UniqueItem(entity.getEquipment().getHelmet());
+        UniqueItem chestplate = new UniqueItem(entity.getEquipment().getChestplate());
+        UniqueItem leggings = new UniqueItem(entity.getEquipment().getLeggings());
+        UniqueItem boots = new UniqueItem(entity.getEquipment().getBoots());
 
         if(offhand.isValid() && offhand.isSpecialItem())
-            SocketEvent.handler(offhand, type, e, EntityInventorySlotType.OFFHAND);
+            SocketEvent.handler(offhand, e, EntityInventorySlotType.OFFHAND);
 
         if(mainhand.isValid() && mainhand.isSpecialItem())
-            SocketEvent.handler(mainhand, type, e, EntityInventorySlotType.MAINHAND);
+            SocketEvent.handler(mainhand, e, EntityInventorySlotType.MAINHAND);
 
         if(helmet.isValid() && helmet.isSpecialItem())
-            SocketEvent.handler(helmet, type, e, EntityInventorySlotType.HELMET);
+            SocketEvent.handler(helmet, e, EntityInventorySlotType.HELMET);
 
         if(chestplate.isValid() && chestplate.isSpecialItem())
-            SocketEvent.handler(chestplate, type, e, EntityInventorySlotType.CHESTPLATE);
+            SocketEvent.handler(chestplate, e, EntityInventorySlotType.CHESTPLATE);
 
         if(leggings.isValid() && leggings.isSpecialItem())
-            SocketEvent.handler(leggings, type, e, EntityInventorySlotType.LEGGINGS);
+            SocketEvent.handler(leggings, e, EntityInventorySlotType.LEGGINGS);
 
         if(boots.isValid() && boots.isSpecialItem())
-            SocketEvent.handler(boots, type, e, EntityInventorySlotType.BOOTS);
+            SocketEvent.handler(boots, e, EntityInventorySlotType.BOOTS);
 
     }
 
-    public static void handler(SpecialItem item, EventType type, Event e, EntityInventorySlotType slot)
+    public static void handler(UniqueItem item, Event e, EntityInventorySlotType slot)
     {
-        if(!item.isSpecialItem() || !item.isValid() || !(item instanceof Socketable))
+        if(!item.isSpecialItem() || !item.isValid() || !item.isRightItemType())
             return;
 
-        for(Socket socket : ((Socketable) item).getSocketHandler().getSockets().values())
+        for(Socket socket : item.getSocketHandler().getSockets().values())
         {
             if(socket.isObfuscated())
                 continue;
 
-            switch(type)
+            if(e instanceof PlayerInteractEvent)
             {
-                case PLAYER_INTERACT:
-                    socket.onPlayerInteract((PlayerInteractEvent) e, item, slot);
-                    break;
-                case ENTITY_DAMAGE_BY_ENTITY:
-                    socket.onEntityDamageByEntity((EntityDamageByEntityEvent) e, item, slot);
-                    break;
-                case PLAYER_ITEM_DAMAGE:
-                    socket.onPlayerItemDamage((PlayerItemDamageEvent) e, item, slot);
-                    break;
-                case PLAYER_LAND_ON_GROUND:
-                    socket.onPlayerLandOnGround((PlayerLandOnGroundEvent) e, item, slot);
-                    break;
-                case PLAYER_MOVED_LOCATION:
-                    socket.onPlayerMovedLocation((PlayerMovedLocationEvent) e, item, slot);
-                    break;
-                case PLAYER_STANDING_STILL:
-                    socket.onPlayerStandingStill((PlayerStandingStillEvent) e, item, slot);
-                    break;
-                case ENTITY_DEATH:
-                    socket.onEntityDeath((EntityDeathEvent) e, item, slot);
-                    break;
-                case ENTITY_DAMAGE:
-                    socket.onEntityDamage((EntityDamageEvent) e, item, slot);
-                    break;
-                case PLAYER_INTERACT_ENTITY:
-                    socket.onPlayerInteractEntity((PlayerInteractEntityEvent) e, item, slot);
-                    break;
+                socket.onPlayerInteract((PlayerInteractEvent) e, item, slot);
+                continue;
             }
+
+
+            if(e instanceof EntityDamageByEntityEvent)
+            {
+                socket.onEntityDamageByEntity((EntityDamageByEntityEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof PlayerItemDamageEvent)
+            {
+                socket.onPlayerItemDamage((PlayerItemDamageEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof PlayerLandOnGroundEvent)
+            {
+                socket.onPlayerLandOnGround((PlayerLandOnGroundEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof PlayerMovedLocationEvent)
+            {
+                socket.onPlayerMovedLocation((PlayerMovedLocationEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof PlayerStandingStillEvent)
+            {
+                socket.onPlayerStandingStill((PlayerStandingStillEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof EntityDeathEvent)
+            {
+                socket.onEntityDeath((EntityDeathEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof EntityDamageEvent)
+            {
+                socket.onEntityDamage((EntityDamageEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof PlayerInteractEntityEvent)
+            {
+                socket.onPlayerInteractEntity((PlayerInteractEntityEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof PlayerLookingAtEntityEvent)
+            {
+                socket.onPlayerLookingAtEntity((PlayerLookingAtEntityEvent) e, item, slot);
+                continue;
+            }
+
+
+            if(e instanceof PrepareSocketCooldownEvent)
+            {
+                socket.onPrepareSocketCooldown((PrepareSocketCooldownEvent) e, item, slot);
+                continue;
+            }
+
+
+            for (Method m : socket.getClass().getMethods()) {
+
+                Class<?>[] params = m.getParameterTypes();
+                if(params.length != 3)
+                    continue;
+
+                if(!params[2].isInstance(slot))
+                    continue;
+
+                if(!params[1].isInstance(item))
+                    continue;
+
+                if(params[0].isInstance(e))
+                {
+                    try {
+                        m.invoke(socket, e, item, slot);
+                    } catch (IllegalAccessException e1) {
+                        e1.printStackTrace();
+                    } catch (InvocationTargetException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    break;
+                }
+            }
+
+
         }
 
 

@@ -3,7 +3,7 @@ package com.openrubicon.items.classes.sockets.abilities;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -68,7 +68,7 @@ public class Mark extends Socket {
 
 
     @Override
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, SpecialItem item, EntityInventorySlotType slot)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, UniqueItem item, EntityInventorySlotType slot)
     {
         if(!(e.getEntity() instanceof Player))
             return;

@@ -1,5 +1,6 @@
 package com.openrubicon.items.classes.items.orbs;
 
+import com.openrubicon.core.api.services.interfaces.Service;
 import com.openrubicon.items.classes.items.orbs.types.Orb;
 import org.bukkit.Bukkit;
 
@@ -7,16 +8,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
-public class OrbProvider {
+public class OrbProvider implements Service {
 
     protected static LinkedHashMap<String, Orb> orbs = new LinkedHashMap<>();
 
-    public static LinkedHashMap<String, Orb> getOrbs()
+    public LinkedHashMap<String, Orb> getOrbs()
     {
         return OrbProvider.orbs;
     }
 
-    public static void add(Orb orb)
+    public void add(Orb orb)
     {
         if(!OrbProvider.orbs.containsKey(orb.getKey()))
         {
@@ -26,37 +27,37 @@ public class OrbProvider {
         }
     }
 
-    public static void addAll(HashSet<Orb> orbs)
+    public void addAll(HashSet<Orb> orbs)
     {
         for(Orb orb : orbs)
         {
-            OrbProvider.add(orb);
+            this.add(orb);
         }
     }
 
-    public static void remove(Orb orb)
+    public void remove(Orb orb)
     {
-        if(OrbProvider.getOrbs().containsKey(orb.getKey()))
-            OrbProvider.getOrbs().remove(orb.getKey());
+        if(this.getOrbs().containsKey(orb.getKey()))
+            this.getOrbs().remove(orb.getKey());
     }
 
-    public static Orb get(int index)
+    public Orb get(int index)
     {
-        if((index + 1) > OrbProvider.getOrbs().size())
+        if((index + 1) > this.getOrbs().size())
             return null;
 
         ArrayList<Orb> orbs = new ArrayList<>();
-        orbs.addAll(OrbProvider.getOrbs().values());
+        orbs.addAll(this.getOrbs().values());
 
         return orbs.get(index);
     }
 
-    public static void clear()
+    public void clear()
     {
         OrbProvider.orbs.clear();
     }
 
-    public static ArrayList<Orb> getValidSockets()
+    public ArrayList<Orb> getValidSockets()
     {
         ArrayList<Orb> validSockets = new ArrayList<>();
         validSockets.addAll(orbs.values());

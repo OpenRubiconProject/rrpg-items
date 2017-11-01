@@ -3,12 +3,14 @@ package com.openrubicon.items.classes.sockets;
 import com.openrubicon.core.api.interfaces.*;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.events.PlayerLandOnGroundEvent;
+import com.openrubicon.core.events.PlayerLookingAtEntityEvent;
 import com.openrubicon.core.events.PlayerMovedLocationEvent;
 import com.openrubicon.core.events.PlayerStandingStillEvent;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
-import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.items.specs.ItemSpecs;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
+import com.openrubicon.items.classes.sockets.events.PrepareSocketCooldownEvent;
 import com.openrubicon.items.classes.sockets.nbt.SocketProperties;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -111,21 +113,25 @@ abstract public class Socket implements Persistable, Obfuscatable, Observeable, 
         return true;
     }
 
-    public void onPlayerInteract(PlayerInteractEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onPlayerInteract(PlayerInteractEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
-    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onPlayerLandOnGround(PlayerLandOnGroundEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
-    public void onPlayerItemDamage(PlayerItemDamageEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onPlayerItemDamage(PlayerItemDamageEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
-    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onPlayerMovedLocation(PlayerMovedLocationEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
-    public void onPlayerStandingStill(PlayerStandingStillEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onPlayerStandingStill(PlayerStandingStillEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
-    public void onEntityDeath(EntityDeathEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onEntityDeath(EntityDeathEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
-    public void onEntityDamage(EntityDamageEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onEntityDamage(EntityDamageEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent e, SpecialItem item, EntityInventorySlotType slot) {}
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent e, UniqueItem item, EntityInventorySlotType slot) {}
+
+    public void onPlayerLookingAtEntity(PlayerLookingAtEntityEvent e, UniqueItem item, EntityInventorySlotType slot) {}
+
+    public void onPrepareSocketCooldown(PrepareSocketCooldownEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 }

@@ -1,5 +1,6 @@
 package com.openrubicon.items.classes.sockets;
 
+import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.classes.items.specs.ItemSpecs;
 import org.bukkit.Material;
@@ -19,12 +20,12 @@ public class SocketFactory {
         if(socketCount < 1)
             return null;
         int choice = Helpers.rng.nextInt(socketCount);
-        return SocketProvider.get(choice);
+        return RRPGCore.services.getSerivce(SocketProvider.class).get(choice);
     }
 
     public static Socket random(Material material)
     {
-        ArrayList<Socket> validSockets = SocketProvider.getValidSockets(material);
+        ArrayList<Socket> validSockets = RRPGCore.services.getSerivce(SocketProvider.class).getValidSockets(material);
         int socketCount = validSockets.size();
         if(socketCount < 1)
             return null;

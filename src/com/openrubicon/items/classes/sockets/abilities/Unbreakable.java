@@ -4,7 +4,7 @@ import com.openrubicon.core.api.inventory.entities.PlayerInventory;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.Socket;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -38,7 +38,7 @@ public class Unbreakable extends Socket {
     }
 
     @Override
-    public void onPlayerItemDamage(PlayerItemDamageEvent e, SpecialItem item, EntityInventorySlotType slot)
+    public void onPlayerItemDamage(PlayerItemDamageEvent e, UniqueItem item, EntityInventorySlotType slot)
     {
         if(!item.isSpecialItem())
             return;

@@ -22,6 +22,9 @@ public class SocketProperties extends Properties implements Observeable {
             if(propName.toLowerCase().equals(Constants.OBFUSCATED))
                 continue;
 
+            if(propName.toLowerCase().equals(Constants.UUID))
+                continue;
+
             String propValue = entry.getValue();
 
             if(Helpers.isNumeric(propValue))

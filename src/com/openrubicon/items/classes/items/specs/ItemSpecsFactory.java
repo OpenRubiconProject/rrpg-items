@@ -5,6 +5,21 @@ import com.openrubicon.items.helpers.Constants;
 
 public class ItemSpecsFactory {
 
+    public static ItemSpecs generateFromCoreValues(double rarity, double sockets, double power)
+    {
+        int durability = (int)calculateDurability(rarity, power, sockets);
+        return new ItemSpecs(rarity, power, sockets, calculateAttributePoints(rarity, power), durability, durability, total(), 0);
+    }
+
+    public static ItemSpecs generateFromCoreValues(double rarity, double sockets, double power, int durability)
+    {
+        return new ItemSpecs(rarity, power, sockets, calculateAttributePoints(rarity, power), durability, durability, total(), 0);
+    }
+
+    public static ItemSpecs generateFromCoreValues(double rarity, double sockets, double power, int durability, int points)
+    {
+        return new ItemSpecs(rarity, power, sockets, points, durability, durability, total(), 0);
+    }
 
 
     public static ItemSpecs generateSpecs()

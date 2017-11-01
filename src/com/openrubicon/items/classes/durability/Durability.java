@@ -1,11 +1,14 @@
 package com.openrubicon.items.classes.durability;
 
 import com.openrubicon.core.api.interfaces.Observeable;
+import com.openrubicon.core.api.vault.items.Items;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.classes.durability.enums.DurabilityStatus;
 import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
@@ -65,7 +68,7 @@ public class Durability implements Observeable {
 
     public void adjustDurability(int amount)
     {
-        SpecialItem item = new SpecialItem(this.i);
+        UniqueItem item = new UniqueItem(this.i);
 
         if(!item.isSpecialItem())
             return;
@@ -74,9 +77,17 @@ public class Durability implements Observeable {
 
         item.save();
 
+        /*ItemMeta meta = item.getItem().getItemMeta();
+        String[] s = Items.itemNameByType(item.getItem().getType()).split(" ");
+        meta.setDisplayName(Helpers.colorize(item.getRarity().getColoredName() + " " + s[s.length - 1]));
+        meta.setLore(item.getLore());
+        item.getItem().setItemMeta(meta);*/
+
         this.i = item.getItem();
 
         this.i.setDurability((short) this.getVisualDurability());
+
+
     }
 
     public boolean hasDurability(int amount)

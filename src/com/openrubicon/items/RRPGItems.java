@@ -4,15 +4,17 @@ import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
 import com.openrubicon.core.api.recipes.interfaces.Recipe;
+import com.openrubicon.core.api.scoreboard.ScoreboardSectionService;
 import com.openrubicon.core.interfaces.Module;
 import com.openrubicon.items.classes.items.orbs.OrbProvider;
 import com.openrubicon.items.classes.items.orbs.types.*;
+import com.openrubicon.items.classes.scoreboard.Cooldowns;
 import com.openrubicon.items.classes.sockets.SocketProvider;
 import com.openrubicon.items.classes.sockets.abilities.*;
 import com.openrubicon.items.classes.sockets.enchants.*;
 import com.openrubicon.items.classes.sockets.effects.*;
 import com.openrubicon.items.classes.sockets.events.SocketActionEventListener;
-import com.openrubicon.items.commands.ItemGenerate;
+import com.openrubicon.items.commands.*;
 import com.openrubicon.items.events.EventListener;
 import com.openrubicon.items.recipes.anvil.ItemToSocketOrb;
 import com.openrubicon.items.recipes.anvil.SocketOrbToItem;
@@ -27,11 +29,11 @@ import java.util.ArrayList;
  *
  * - v UniqueItem
  * - v Orbs
- * - Anvils
+ * - v Anvils
  * - v (Moved to Combat repo) Combat
- * - Switch SocketProvider to use the Service Provider API
- * - Create command classes
- * - Create configuration commands
+ * - v Switch SocketProvider to use the Service Provider API
+ * - v Create command classes
+ * - Create configuration classes
  * - Create database models
  * - Create events
  *
@@ -57,6 +59,12 @@ public class RRPGItems extends JavaPlugin implements Module {
     public ArrayList<Command> getCommands() {
         ArrayList<Command> commands = new ArrayList<>();
         commands.add(new ItemGenerate());
+        commands.add(new ItemGenerate$());
+        commands.add(new ItemGenerateType());
+        commands.add(new ItemGenerateWithAllSpecs());
+        commands.add(new ItemGenerateWithCoreSpecs());
+        commands.add(new ItemGenerateWithSpecsAndDurability());
+        commands.add(new ItemView());
         return commands;
     }
 
@@ -90,11 +98,16 @@ public class RRPGItems extends JavaPlugin implements Module {
         getServer().getPluginManager().registerEvents(new SocketActionEventListener(), this);
         getLogger().info("Registered Events");
 
+        RRPGCore.services.create(new SocketProvider());
+        RRPGCore.services.create(new OrbProvider());
+
         this.addOrbsToProvider();
         getLogger().info("Orbs injected");
 
         this.addSocketsToProvider();
         getLogger().info("Sockets injected");
+
+        RRPGCore.services.getSerivce(ScoreboardSectionService.class).getScoreboardSections().add(new Cooldowns());
     }
 
     @Override
@@ -105,43 +118,43 @@ public class RRPGItems extends JavaPlugin implements Module {
 
     public void addOrbsToProvider()
     {
-        OrbProvider.add(new AttributeOrb());
-        OrbProvider.add(new ElementalOrb());
-        OrbProvider.add(new RarityOrb());
-        OrbProvider.add(new RepairOrb());
-        OrbProvider.add(new SocketOrb());
+        RRPGCore.services.getSerivce(OrbProvider.class).add(new AttributeOrb());
+        RRPGCore.services.getSerivce(OrbProvider.class).add(new ElementalOrb());
+        RRPGCore.services.getSerivce(OrbProvider.class).add(new RarityOrb());
+        RRPGCore.services.getSerivce(OrbProvider.class).add(new RepairOrb());
+        RRPGCore.services.getSerivce(OrbProvider.class).add(new SocketOrb());
     }
 
     public void addSocketsToProvider()
     {
         // Abilities
-        SocketProvider.add(new ThrustUp());
-        SocketProvider.add(new GroundPound());
-        SocketProvider.add(new GroundSlam());
-        SocketProvider.add(new Groundsplosion());
-        SocketProvider.add(new Mark());
-        SocketProvider.add(new RadialMark());
-        SocketProvider.add(new Launch());
-        SocketProvider.add(new Bounce());
-        SocketProvider.add(new Unbreakable());
-        SocketProvider.add(new Scare());
-        SocketProvider.add(new NaughtyCreeper());
-        SocketProvider.add(new TreeHugger());
-        SocketProvider.add(new Stab());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new ThrustUp());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new GroundPound());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new GroundSlam());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Groundsplosion());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Mark());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new RadialMark());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Launch());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Bounce());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Unbreakable());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Scare());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new NaughtyCreeper());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new TreeHugger());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Stab());
 
         // Effects
-        SocketProvider.add(new MarathonRunner());
-        SocketProvider.add(new Bandage());
-        SocketProvider.add(new Martyrdom());
-        SocketProvider.add(new Jarvis());
-        SocketProvider.add(new FlightSuit());
-        SocketProvider.add(new SteelFeet());
-        SocketProvider.add(new Striking());
-        SocketProvider.add(new ClutchBarrier());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new MarathonRunner());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Bandage());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Martyrdom());
+        //RRPGCore.services.getSerivce(SocketProvider.class).add(new Jarvis()); TODO: Move to combat repo
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new FlightSuit());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new SteelFeet());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Striking());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new ClutchBarrier());
 
         //Enchants
-        SocketProvider.add(new Reinforced());
-        SocketProvider.add(new CooldownReduction());
-        SocketProvider.add(new Spam());
+        //RRPGCore.services.getSerivce(SocketProvider.class).add(new Reinforced()); TODO: Move to combat repo
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new CooldownReduction());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new Spam());
     }
 }

@@ -13,11 +13,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public class ItemGenerate extends Command {
+public class ItemGenerate$ extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "item generate";
+        return "item generate $";
     }
 
     @Override
@@ -32,16 +32,19 @@ public class ItemGenerate extends Command {
     public void handle(Interactable interactable, String[] strings) {
         org.bukkit.entity.Player player = ((Player)interactable).getPlayer();
 
-        int choice = Helpers.rng.nextInt(MaterialGroups.GENERATABLE.size());
-        ArrayList<Material> materials = new ArrayList<>();
-        materials.addAll(MaterialGroups.GENERATABLE);
+        for(int i = 0; i < Integer.parseInt(strings[0]); i++)
+        {
+            int choice = Helpers.rng.nextInt(MaterialGroups.GENERATABLE.size());
+            ArrayList<Material> materials = new ArrayList<>();
+            materials.addAll(MaterialGroups.GENERATABLE);
 
-        ItemStack i = new ItemStack(materials.get(choice));
+            ItemStack item = new ItemStack(materials.get(choice));
 
-        UniqueItem uniqueItem = new UniqueItem(i, false);
-        uniqueItem.generate();
-        uniqueItem.save();
-        player.getInventory().addItem(uniqueItem.getItem());
+            UniqueItem uniqueItem = new UniqueItem(item, false);
+            uniqueItem.generate();
+            uniqueItem.save();
+            player.getInventory().addItem(uniqueItem.getItem());
+        }
 
         player.sendMessage(Helpers.colorize(Constants.MYSTIC_PRIMARY_COLOR + "Enjoy!"));
     }

@@ -1,10 +1,13 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
+import com.openrubicon.core.api.cooldowns.Cooldown;
+import com.openrubicon.core.api.cooldowns.CooldownManager;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.items.classes.items.SpecialItem;
+import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.CooldownSocket;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -67,7 +70,7 @@ public class Stab extends CooldownSocket {
     }
 
     @Override
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent e, SpecialItem item, EntityInventorySlotType slot)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent e, UniqueItem item, EntityInventorySlotType slot)
     {
         if(this.isOnCooldown())
             return;
@@ -78,12 +81,11 @@ public class Stab extends CooldownSocket {
         if(!(e.getRightClicked() instanceof LivingEntity))
             return;
 
-
         LivingEntity entity = (LivingEntity)e.getRightClicked();
 
         entity.damage(this.damage);
 
-        this.startCooldown();
+        this.startCooldown(e.getPlayer(), item);
     }
 
 }
