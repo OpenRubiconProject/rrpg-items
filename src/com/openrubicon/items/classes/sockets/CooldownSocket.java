@@ -90,18 +90,7 @@ abstract public class CooldownSocket extends Socket implements Cooldownable {
 
         //Bukkit.broadcastMessage(entity.getName());
 
-        if(!SocketCooldownManager.getEntitiesSocketCooldowns().containsKey(entity))
-        {
-            //Bukkit.broadcastMessage("wtf");
-            SocketCooldownManager.getEntitiesSocketCooldowns().put(entity, new LivingEntityCooldownSockets());
-        }
-
-        if(!SocketCooldownManager.getEntitiesSocketCooldowns().get(entity).containsSocket(this.getUuid()))
-        {
-            //Bukkit.broadcastMessage("wtf2");
-            SocketCooldownManager.getEntitiesSocketCooldowns().get(entity).getSockets().add(this);
-            //Bukkit.broadcastMessage(SocketCooldownManager.getEntitySocketCooldowns(entity).size()+"");
-        }
+        SocketCooldownManager.addCooldownToLivingEntity(entity, this);
 
         //Bukkit.broadcastMessage(SocketCooldownManager.getEntitiesSocketCooldowns().get(entity).getSockets().size()+"");
 

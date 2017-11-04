@@ -20,8 +20,6 @@ public class Cooldowns implements ScoreboardSection {
         return "Socket Cooldowns";
     }
 
-
-
     @Override
     public ArrayList<String> getLines(Player player) {
         ArrayList<String> cooldowns = new ArrayList<>();

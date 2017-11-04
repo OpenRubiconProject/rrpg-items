@@ -21,6 +21,10 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -89,99 +93,27 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onCreatureSpawn(CreatureSpawnEvent e)
+    public void onPlayerItemBreakEvent(PlayerItemBreakEvent e)
     {
-        // Generate a random int between 0 and n
-        // digit 1: main hand spawn 1
-        // digit 2: helmet 2
-        // digit 3: chest 4
-        // digit 4: legs 8
-        // digit 5: boots 16
-        if(e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
-        {
-            int itemChance = 0;
+        SocketCooldownManager.removeCooldownFromLivingEntity(e.getPlayer(), e.getBrokenItem());
+    }
 
-            if(e.getEntity() instanceof Spider || e.getEntity() instanceof Creeper || e.getEntity() instanceof Enderman || e.getEntity() instanceof Silverfish || e.getEntity() instanceof WitherSkeleton)
-                itemChance = 1;
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent e){
+        SocketCooldownManager.removeCooldownFromLivingEntity(e.getPlayer(), e.getItemDrop().getItemStack());
+    }
 
-            if(e.getEntity() instanceof Skeleton || e.getEntity() instanceof Zombie || e.getEntity() instanceof PigZombie || e.getEntity() instanceof Husk)
-                itemChance = 31;
-
-            if(itemChance == 0)
-                return;
-
-            int chanceChoice = Helpers.rng.nextInt(itemChance + 1);
-
-            if((chanceChoice & 1) > 0)
-            {
-                int choice = Helpers.rng.nextInt(MaterialGroups.HAND_HELD.size());
-                ArrayList<Material> materials = new ArrayList<>();
-                materials.addAll(MaterialGroups.HAND_HELD);
-
-                ItemStack i = new ItemStack(materials.get(choice));
-
-                UniqueItem item = new UniqueItem(i, false);
-                item.generate();
-                item.save();
-                e.getEntity().getEquipment().setItemInMainHand(item.getItem());
-            }
-
-            if((chanceChoice & 2) > 0)
-            {
-                int choice = Helpers.rng.nextInt(MaterialGroups.HELMETS.size());
-                ArrayList<Material> materials = new ArrayList<>();
-                materials.addAll(MaterialGroups.HELMETS);
-
-                ItemStack i = new ItemStack(materials.get(choice));
-
-                UniqueItem item = new UniqueItem(i, false);
-                item.generate();
-                item.save();
-                e.getEntity().getEquipment().setHelmet(item.getItem());
-            }
-
-            if((chanceChoice & 4) > 0)
-            {
-                int choice = Helpers.rng.nextInt(MaterialGroups.CHESTPLATES.size());
-                ArrayList<Material> materials = new ArrayList<>();
-                materials.addAll(MaterialGroups.CHESTPLATES);
-
-                ItemStack i = new ItemStack(materials.get(choice));
-
-                UniqueItem item = new UniqueItem(i, false);
-                item.generate();
-                item.save();
-                e.getEntity().getEquipment().setChestplate(item.getItem());
-            }
-
-            if((chanceChoice & 8) > 0)
-            {
-                int choice = Helpers.rng.nextInt(MaterialGroups.LEGGINGS.size());
-                ArrayList<Material> materials = new ArrayList<>();
-                materials.addAll(MaterialGroups.LEGGINGS);
-
-                ItemStack i = new ItemStack(materials.get(choice));
-
-                UniqueItem item = new UniqueItem(i, false);
-                item.generate();
-                item.save();
-                e.getEntity().getEquipment().setLeggings(item.getItem());
-            }
-
-            if((chanceChoice & 16) > 0)
-            {
-                int choice = Helpers.rng.nextInt(MaterialGroups.BOOTS.size());
-                ArrayList<Material> materials = new ArrayList<>();
-                materials.addAll(MaterialGroups.BOOTS);
-
-                ItemStack i = new ItemStack(materials.get(choice));
-
-                UniqueItem item = new UniqueItem(i, false);
-                item.generate();
-                item.save();
-                e.getEntity().getEquipment().setBoots(item.getItem());
-            }
-
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent e) {
+        for (ItemStack item : e.getDrops()) {
+            SocketCooldownManager.removeCooldownFromLivingEntity(e.getEntity(), item);
         }
     }
+
+    @EventHandler
+    public void onPlayerPickupItem(PlayerPickupItemEvent e)
+    {
+        SocketCooldownManager.addCooldownToLivingEntity(e.getPlayer(), e.getItem().getItemStack());
+    }
+
 }

@@ -125,6 +125,8 @@ public class SocketActionEventListener implements Listener {
                 if(item.getItemSpecs().getDurabilityCurrent() <= 0)
                 {
                     e.setCancelled(true);
+                    ActionBarMessage actionBarMessage = new ActionBarMessage(Constants.RED + Constants.BOLD + "Your Tool Doesn't Have Enough Durability", Priority.HIGH, 40);
+                    ActionBarManager.interrupt(p, actionBarMessage);
                     return;
                 }
             }
@@ -206,7 +208,7 @@ public class SocketActionEventListener implements Listener {
 
         UniqueItem item = new UniqueItem(i);
 
-        if(!item.isSpecialItem() && !item.isRightItemType())
+        if(!item.isValid() || !item.isSpecialItem() || !item.isRightItemType())
             return;
 
         if(item.getItemSpecs().getDurabilityCurrent() <= 0)
