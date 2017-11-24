@@ -7,6 +7,7 @@ import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.classes.durability.enums.DurabilityStatus;
 import com.openrubicon.items.classes.items.SpecialItem;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -30,10 +31,10 @@ public class Durability implements Observeable {
 
     public DurabilityStatus getStatus()
     {
-        if(i.getDurability() == i.getType().getMaxDurability())
+        if(i.getDurability() <= 0)
             return DurabilityStatus.FULL;
 
-        if(i.getDurability() <= 0)
+        if(i.getDurability() == i.getType().getMaxDurability())
             return DurabilityStatus.EMPTY;
 
         return DurabilityStatus.USED;
@@ -50,8 +51,11 @@ public class Durability implements Observeable {
     {
         SpecialItem item = new SpecialItem(this.i);
 
-        if(!item.isSpecialItem())
-            return this.i.getDurability();
+        if(!item.isSpecialItem() || !item.isValid())
+        {
+            return this.i.getType().getMaxDurability() - this.i.getDurability();
+        }
+
 
         return (int) item.getItemSpecs().getDurabilityCurrent();
     }

@@ -1,7 +1,10 @@
 package com.openrubicon.items.classes.items.orbs.types;
 
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.sockets.SocketHandler;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,7 +46,20 @@ public class SocketOrb extends Orb {
         double temp = this.getItemSpecs().getSockets();
         this.getItemSpecs().setSockets(1);
 
-        socketHandler.setItem(this.getItem());
+        int total = MaterialGroups.GENERATABLE.size();
+        int index = Helpers.randomInt(0, total);
+        int i = 0;
+
+        for(Material material : MaterialGroups.GENERATABLE)
+        {
+            if(i == index)
+            {
+                socketHandler.setItem(new ItemStack(material));
+                break;
+            }
+            i++;
+        }
+
         socketHandler.setItemSpecs(this.getItemSpecs());
         socketHandler.setNbt(this.getNbt());
         socketHandler.generate();

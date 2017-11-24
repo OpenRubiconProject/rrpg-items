@@ -88,6 +88,10 @@ public class SpecialItem implements Persistable, Observeable, Loreable, Generata
         return nbt;
     }
 
+    public void setNbt(NBT nbt) {
+        this.nbt = nbt;
+    }
+
     public ItemProperties getItemProperties() {
         return itemProperties;
     }

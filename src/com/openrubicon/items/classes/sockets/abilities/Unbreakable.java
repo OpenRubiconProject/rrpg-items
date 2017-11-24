@@ -40,7 +40,7 @@ public class Unbreakable extends Socket {
     @Override
     public void onPlayerItemDamage(PlayerItemDamageEvent e, UniqueItem item, EntityInventorySlotType slot)
     {
-        if(!item.isSpecialItem())
+        /*if(!item.isSpecialItem())
             return;
 
         int itemDurability = (int) Helpers.scale(0, 0, item.getItemSpecs().getDurabilityMax(), 0, item.getItem().getType().getMaxDurability());
@@ -55,7 +55,7 @@ public class Unbreakable extends Socket {
         i.setDurability((short)adjustedDurability);
 
         PlayerInventory inventory = new PlayerInventory(e.getPlayer());
-        inventory.setSlotItem(slot, i);
+        inventory.setSlotItem(slot, i);*/
 
         e.setCancelled(true);
     }

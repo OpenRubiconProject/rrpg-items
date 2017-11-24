@@ -4,6 +4,7 @@ import com.openrubicon.core.api.inventory.entities.PlayerInventory;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.items.classes.durability.enums.DurabilityStatus;
 import com.openrubicon.items.classes.items.SpecialItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -74,6 +75,7 @@ public class PlayerDurability {
         EntityInventorySlotType slot = inventory.getItemSlotType(this.getItem());
 
         Durability durability = new Durability(this.i);
+
         durability.adjustDurability(this.damage * -1);
 
         this.i = durability.getItem();

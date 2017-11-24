@@ -9,7 +9,6 @@ import com.openrubicon.core.api.recipes.interfaces.AnvilRecipe;
 import com.openrubicon.items.classes.durability.Durability;
 import com.openrubicon.items.classes.items.orbs.OrbFactory;
 import com.openrubicon.items.classes.items.orbs.OrbItem;
-import com.openrubicon.items.classes.items.orbs.types.Orb;
 import com.openrubicon.items.classes.items.orbs.types.SocketOrb;
 import com.openrubicon.items.classes.items.specs.ItemSpecs;
 import com.openrubicon.items.classes.items.unique.UniqueItem;

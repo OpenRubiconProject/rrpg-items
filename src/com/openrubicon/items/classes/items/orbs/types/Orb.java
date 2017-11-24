@@ -6,6 +6,7 @@ import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.classes.items.orbs.nbt.OrbProperties;
 import com.openrubicon.items.classes.items.specs.ItemSpecs;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -64,6 +65,22 @@ abstract public class Orb implements Persistable, Observeable, Loreable, Metable
     @Override
     public boolean generate() {
         this.generateUUID();
+        /*int size = this.getMaterials().size();
+        if(size < 1)
+            return false;
+
+        int random = Helpers.randomInt(0, size);
+        int i = 0;
+        for(Material material : this.getMaterials())
+        {
+            if(i == random)
+            {
+                this.item = new ItemStack(material);
+                break;
+            }
+
+            i++;
+        }*/
         return true;
     }
 

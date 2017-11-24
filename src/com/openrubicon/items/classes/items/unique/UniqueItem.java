@@ -4,6 +4,7 @@ import com.openrubicon.core.api.attributes.AttributeFactory;
 import com.openrubicon.core.api.attributes.AttributeModifier;
 import com.openrubicon.core.api.attributes.AttributeModifiers;
 import com.openrubicon.core.api.clone.Cloner;
+import com.openrubicon.core.api.nbt.NBT;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
@@ -77,7 +78,13 @@ public class UniqueItem extends SpecialItem {
 
     @Override
     public boolean save() {
+        this.setItem(new ItemStack(this.getItem().getType()));
+
+        this.setNbt(new NBT(this.getItem()));
+
         attributeModifiers.save(this.getNbt());
+
+        this.socketHandler.setNbt(this.getNbt());
 
         this.socketHandler.save();
 

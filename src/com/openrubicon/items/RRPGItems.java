@@ -2,6 +2,7 @@ package com.openrubicon.items;
 
 import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.command.Command;
+import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
 import com.openrubicon.core.api.recipes.interfaces.Recipe;
 import com.openrubicon.core.api.scoreboard.ScoreboardSectionService;
@@ -15,6 +16,7 @@ import com.openrubicon.items.classes.sockets.enchants.*;
 import com.openrubicon.items.classes.sockets.effects.*;
 import com.openrubicon.items.classes.sockets.events.SocketActionEventListener;
 import com.openrubicon.items.commands.*;
+import com.openrubicon.items.configuration.SocketOrbSpawnChance;
 import com.openrubicon.items.events.EventListener;
 import com.openrubicon.items.recipes.anvil.ItemToSocketOrb;
 import com.openrubicon.items.recipes.anvil.SocketOrbToItem;
@@ -22,6 +24,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -66,6 +69,13 @@ public class RRPGItems extends JavaPlugin implements Module {
         commands.add(new ItemGenerateWithSpecsAndDurability());
         commands.add(new ItemView());
         return commands;
+    }
+
+    @Override
+    public LinkedList<ConfigurationProperty> getConfigurationProperties() {
+        LinkedList<ConfigurationProperty> properties = new LinkedList<>();
+        properties.add(new SocketOrbSpawnChance());
+        return properties;
     }
 
     @Override
@@ -141,6 +151,7 @@ public class RRPGItems extends JavaPlugin implements Module {
         RRPGCore.services.getSerivce(SocketProvider.class).add(new NaughtyCreeper());
         RRPGCore.services.getSerivce(SocketProvider.class).add(new TreeHugger());
         RRPGCore.services.getSerivce(SocketProvider.class).add(new Stab());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new SocketFarmer());
 
         // Effects
         RRPGCore.services.getSerivce(SocketProvider.class).add(new MarathonRunner());

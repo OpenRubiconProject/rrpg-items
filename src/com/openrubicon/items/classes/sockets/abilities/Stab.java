@@ -1,13 +1,10 @@
 package com.openrubicon.items.classes.sockets.abilities;
 
-import com.openrubicon.core.api.cooldowns.Cooldown;
-import com.openrubicon.core.api.cooldowns.CooldownManager;
 import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.CooldownSocket;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerInteractEntityEvent;

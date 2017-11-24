@@ -16,6 +16,7 @@ import com.openrubicon.items.classes.durability.Durability;
 import com.openrubicon.items.classes.durability.PlayerDurability;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.SocketEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -120,7 +121,7 @@ public class SocketActionEventListener implements Listener {
 
             UniqueItem item = new UniqueItem(i);
 
-            if(item.isSpecialItem() && item.isRightItemType())
+            if(item.isSpecialItem() && item.isValid() && item.isRightItemType())
             {
                 if(item.getItemSpecs().getDurabilityCurrent() <= 0)
                 {
@@ -190,7 +191,6 @@ public class SocketActionEventListener implements Listener {
             return;
 
         Durability durability = new Durability(i);
-
         if(!durability.hasDurability(1))
         {
             ActionBarMessage actionBarMessage = new ActionBarMessage(Constants.RED + Constants.BOLD + "Your Tool Doesn't Have Enough Durability", Priority.HIGH, 40);
@@ -216,6 +216,8 @@ public class SocketActionEventListener implements Listener {
             e.setCancelled(true);
             return;
         }
+
+        SocketEvent.handleLivingEntity(e.getPlayer(), e);
 
         /*Block b = e.getBlock();
 
@@ -268,7 +270,7 @@ public class SocketActionEventListener implements Listener {
         if(item.isSpecialItem())
             SocketEvent.handler(item, e, inventory.getItemSlotType(i));
 
-        if(playerDurability.isBroken())
+        if(playerDurability.isBroken() && !e.isCancelled())
         {
             playerDurability.breakItem();
         }

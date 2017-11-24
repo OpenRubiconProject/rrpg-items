@@ -7,6 +7,7 @@ import com.openrubicon.core.events.PlayerMovedLocationEvent;
 import com.openrubicon.core.events.PlayerStandingStillEvent;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.events.PrepareSocketCooldownEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -36,4 +37,6 @@ public interface SocketEvents {
     default void onPlayerLookingAtEntity(PlayerLookingAtEntityEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
     default void onPrepareSocketCooldown(PrepareSocketCooldownEvent e, UniqueItem item, EntityInventorySlotType slot) {}
+
+    default void onBlockBreak(BlockBreakEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 }

@@ -1,19 +1,15 @@
 package com.openrubicon.items.classes.sockets;
 
-import com.openrubicon.core.api.actionbar.ActionBarManager;
-import com.openrubicon.core.api.actionbar.ActionBarMessage;
 import com.openrubicon.core.api.cooldowns.interfaces.Cooldownable;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
-import com.openrubicon.items.classes.sockets.cooldowns.LivingEntityCooldownSockets;
 import com.openrubicon.items.classes.sockets.cooldowns.SocketCooldown;
 import com.openrubicon.items.classes.sockets.cooldowns.SocketCooldownManager;
 import com.openrubicon.items.classes.sockets.events.PrepareSocketCooldownEvent;
 import com.openrubicon.items.classes.sockets.events.SocketCooldownStartedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
