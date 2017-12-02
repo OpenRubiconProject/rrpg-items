@@ -63,4 +63,14 @@ public class OrbProvider implements Service {
         validSockets.addAll(orbs.values());
         return validSockets;
     }
+
+    @Override
+    public ArrayList<String> getObservation() {
+        ArrayList<String> observation = new ArrayList<>();
+        for(Orb orb : this.getOrbs().values())
+        {
+            observation.add(orb.getName());
+        }
+        return observation;
+    }
 }

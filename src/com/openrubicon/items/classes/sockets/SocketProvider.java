@@ -71,4 +71,14 @@ public class SocketProvider implements Service {
         return validSockets;
     }
 
+    @Override
+    public ArrayList<String> getObservation() {
+        ArrayList<String> observation = new ArrayList<>();
+        for(Socket socket : SocketProvider.getSockets().values())
+        {
+            observation.add(socket.getName());
+        }
+        return observation;
+    }
+
 }

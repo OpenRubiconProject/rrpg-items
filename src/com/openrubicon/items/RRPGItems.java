@@ -6,10 +6,14 @@ import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
 import com.openrubicon.core.api.recipes.interfaces.Recipe;
 import com.openrubicon.core.api.scoreboard.ScoreboardSectionService;
+import com.openrubicon.core.api.scoreboard.interfaces.ScoreboardSection;
+import com.openrubicon.core.api.services.interfaces.Service;
+import com.openrubicon.core.configuration.DevMode;
 import com.openrubicon.core.interfaces.Module;
 import com.openrubicon.items.classes.items.orbs.OrbProvider;
 import com.openrubicon.items.classes.items.orbs.types.*;
 import com.openrubicon.items.classes.scoreboard.Cooldowns;
+import com.openrubicon.items.classes.sockets.Socket;
 import com.openrubicon.items.classes.sockets.SocketProvider;
 import com.openrubicon.items.classes.sockets.abilities.*;
 import com.openrubicon.items.classes.sockets.enchants.*;
@@ -46,6 +50,13 @@ public class RRPGItems extends JavaPlugin implements Module {
     public static Plugin plugin;
 
     @Override
+    public ArrayList<ScoreboardSection> getScoreboardSections() {
+        ArrayList<ScoreboardSection> scoreboardSections = new ArrayList<>();
+        scoreboardSections.add(new Cooldowns());
+        return scoreboardSections;
+    }
+
+    @Override
     public ArrayList<Recipe> getRecipes() {
         ArrayList<Recipe> recipes = new ArrayList<>();
         recipes.add(new SocketOrbToItem());
@@ -68,6 +79,8 @@ public class RRPGItems extends JavaPlugin implements Module {
         commands.add(new ItemGenerateWithCoreSpecs());
         commands.add(new ItemGenerateWithSpecsAndDurability());
         commands.add(new ItemView());
+        commands.add(new ItemShow());
+        commands.add(new ItemViewSlot());
         return commands;
     }
 
@@ -117,7 +130,26 @@ public class RRPGItems extends JavaPlugin implements Module {
         this.addSocketsToProvider();
         getLogger().info("Sockets injected");
 
-        RRPGCore.services.getSerivce(ScoreboardSectionService.class).getScoreboardSections().add(new Cooldowns());
+        if(RRPGCore.config.get(DevMode.class).getBoolean())
+        {
+            getLogger().info(" ");
+            getLogger().info("===== DUMPING SOCKET INFORMATION =====");
+            for(Socket socket : SocketProvider.getSockets().values())
+            {
+                getLogger().info("  " + socket.getName());
+            }
+
+            getLogger().info(" ");
+
+            getLogger().info("===== DUMPING ORB INFORMATION =====");
+            for(Orb orb : RRPGCore.services.getSerivce(OrbProvider.class).getOrbs().values())
+            {
+                getLogger().info("  " + orb.getName());
+            }
+            getLogger().info(" ");
+
+        }
+
     }
 
     @Override
@@ -167,5 +199,6 @@ public class RRPGItems extends JavaPlugin implements Module {
         //RRPGCore.services.getSerivce(SocketProvider.class).add(new Reinforced()); TODO: Move to combat repo
         RRPGCore.services.getSerivce(SocketProvider.class).add(new CooldownReduction());
         RRPGCore.services.getSerivce(SocketProvider.class).add(new Spam());
+        RRPGCore.services.getSerivce(SocketProvider.class).add(new SmallStomach());
     }
 }

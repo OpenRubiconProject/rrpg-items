@@ -4,21 +4,17 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.interactables.Player;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.server.players.Players;
 import com.openrubicon.core.api.utility.DynamicPrimitive;
-import com.openrubicon.core.api.vault.items.Items;
-import com.openrubicon.core.helpers.Constants;
-import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public class ItemGenerateType extends Command {
+public class ItemShow extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "item generate type $";
+        return "item show";
     }
 
     @Override
@@ -31,19 +27,17 @@ public class ItemGenerateType extends Command {
 
     @Override
     public void handle(Interactable interactable, ArrayList<DynamicPrimitive> args) {
-        org.bukkit.entity.Player player = ((Player)interactable).getPlayer();
+        org.bukkit.entity.Player playerWithItem = ((Player)interactable).getPlayer();
 
-        Material material = Items.itemMaterialByName(args.get(0).getString());
-        if(material == null)
-            return;
+        UniqueItem uniqueItem = new UniqueItem(playerWithItem.getInventory().getItemInMainHand());
 
-        ItemStack item = new ItemStack(material);
+        Players playersAPI = new Players();
+        for(org.bukkit.entity.Player player : playersAPI.getOnlinePlayers())
+        {
+            for(int i = 0; i < uniqueItem.getObservation().size(); i++) {
+                player.sendMessage(uniqueItem.getLore().get(i));
+            }
+        }
 
-        UniqueItem uniqueItem = new UniqueItem(item, false);
-        uniqueItem.generate();
-        uniqueItem.save();
-        player.getInventory().addItem(uniqueItem.getItem());
-
-        player.sendMessage(Helpers.colorize(Constants.MYSTIC_PRIMARY_COLOR + "Enjoy!"));
     }
 }

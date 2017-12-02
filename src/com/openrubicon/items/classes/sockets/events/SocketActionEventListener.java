@@ -174,9 +174,15 @@ public class SocketActionEventListener implements Listener {
     }
 
     @EventHandler
+    public void onFoodLevelChange(FoodLevelChangeEvent e)
+    {
+        SocketEvent.handleLivingEntity(e.getEntity(), e);
+    }
+
+    @EventHandler
     public void onPlayerItemBreakEvent(PlayerItemBreakEvent e)
     {
-
+        SocketEvent.handleLivingEntity(e.getPlayer(), e);
     }
 
     @EventHandler

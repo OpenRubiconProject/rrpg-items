@@ -4,6 +4,7 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.interactables.Player;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.utility.DynamicPrimitive;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
@@ -19,7 +20,7 @@ public class ItemGenerateWithSpecsAndDurability extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "item generate specs $ $ $ $";
+        return "item generate specs $n $n $n $n";
     }
 
     @Override
@@ -31,13 +32,13 @@ public class ItemGenerateWithSpecsAndDurability extends Command {
     }
 
     @Override
-    public void handle(Interactable interactable, String[] strings) {
+    public void handle(Interactable interactable, ArrayList<DynamicPrimitive> args) {
         org.bukkit.entity.Player player = ((Player)interactable).getPlayer();
 
-        double rarity = Integer.parseInt(strings[0]);
-        double sockets = Integer.parseInt(strings[1]);
-        double power = Integer.parseInt(strings[2]);
-        int durability = Integer.parseInt(strings[3]);
+        double rarity = args.get(0).getInt();
+        double sockets = args.get(1).getInt();
+        double power = args.get(2).getInt();
+        int durability = args.get(3).getInt();
 
         ItemSpecs itemSpecs = ItemSpecsFactory.generateFromCoreValues(rarity, sockets, power, durability);
 

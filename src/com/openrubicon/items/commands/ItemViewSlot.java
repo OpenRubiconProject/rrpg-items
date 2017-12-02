@@ -4,21 +4,19 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.interactables.Player;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.api.utility.DynamicPrimitive;
-import com.openrubicon.core.api.vault.items.Items;
-import com.openrubicon.core.helpers.Constants;
-import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.items.classes.inventory.LivingEntityInventory;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public class ItemGenerateType extends Command {
+public class ItemViewSlot extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "item generate type $";
+        return "item view $s";
     }
 
     @Override
@@ -33,17 +31,25 @@ public class ItemGenerateType extends Command {
     public void handle(Interactable interactable, ArrayList<DynamicPrimitive> args) {
         org.bukkit.entity.Player player = ((Player)interactable).getPlayer();
 
-        Material material = Items.itemMaterialByName(args.get(0).getString());
-        if(material == null)
+        LivingEntityInventory livingEntityInventory = new LivingEntityInventory(player);
+
+        EntityInventorySlotType entityInventorySlotType = EntityInventorySlotType.fromString(args.get(0).getString());
+
+        if(entityInventorySlotType == null)
+        {
+            interactable.sendMessage("That is not a valid slot type");
             return;
+        }
 
-        ItemStack item = new ItemStack(material);
+        ItemStack itemStack = livingEntityInventory.getItemInSlot(entityInventorySlotType);
 
-        UniqueItem uniqueItem = new UniqueItem(item, false);
-        uniqueItem.generate();
-        uniqueItem.save();
-        player.getInventory().addItem(uniqueItem.getItem());
+        if(itemStack == null)
+        {
+            interactable.sendMessage("You don't have an item in this slot");
+            return;
+        }
 
-        player.sendMessage(Helpers.colorize(Constants.MYSTIC_PRIMARY_COLOR + "Enjoy!"));
+        UniqueItem uniqueItem = new UniqueItem(itemStack);
+        interactable.sendMessage(uniqueItem.getObservation());
     }
 }

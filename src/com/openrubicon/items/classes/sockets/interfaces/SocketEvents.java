@@ -11,8 +11,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
 public interface SocketEvents {
@@ -39,4 +41,8 @@ public interface SocketEvents {
     default void onPrepareSocketCooldown(PrepareSocketCooldownEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 
     default void onBlockBreak(BlockBreakEvent e, UniqueItem item, EntityInventorySlotType slot) {}
+
+    default void onFoodLevelChange(FoodLevelChangeEvent e, UniqueItem item, EntityInventorySlotType slot) {}
+
+    default void onPlayerItemBreak(PlayerItemBreakEvent e, UniqueItem item, EntityInventorySlotType slot) {}
 }

@@ -5,6 +5,7 @@ import com.openrubicon.core.events.PlayerLandOnGroundEvent;
 import com.openrubicon.core.events.PlayerLookingAtEntityEvent;
 import com.openrubicon.core.events.PlayerMovedLocationEvent;
 import com.openrubicon.core.events.PlayerStandingStillEvent;
+import com.openrubicon.items.classes.durability.Durability;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
 import com.openrubicon.items.classes.sockets.events.PrepareSocketCooldownEvent;
 import org.bukkit.Bukkit;
@@ -86,12 +87,17 @@ public class SocketEvent {
         if(!item.isSpecialItem() || !item.isValid() || !item.isRightItemType())
             return;
 
+        Durability durability = new Durability(item.getItem());
+
+        if(durability.isBroken())
+            return;
+
         for(Socket socket : item.getSocketHandler().getSockets().values())
         {
             if(socket.isObfuscated())
                 continue;
 
-            if(e instanceof PlayerInteractEvent)
+            /*if(e instanceof PlayerInteractEvent)
             {
                 socket.onPlayerInteract((PlayerInteractEvent) e, item, slot);
                 continue;
@@ -165,38 +171,60 @@ public class SocketEvent {
             {
                 socket.onPrepareSocketCooldown((PrepareSocketCooldownEvent) e, item, slot);
                 continue;
-            }
+            }*/
 
+            String simpleName = e.getClass().getSimpleName();
+            String methodName = "on" + simpleName.substring(0, simpleName.length() - 5);
+            //Bukkit.broadcastMessage(methodName);
 
-            for (Method m : socket.getClass().getMethods()) {
+            /*Class[] parameters = new Class[3];
+            parameters[0] = e.getClass();
+            parameters[1] = item.getClass();
+            parameters[2] = slot.getClass();*/
 
-                Class<?>[] params = m.getParameterTypes();
-                if(params.length != 3)
-                    continue;
+            try {
+                Method method = socket.getClass().getMethod(methodName, e.getClass(), item.getClass(), slot.getClass());
+                try {
+                    method.invoke(socket, e, item, slot);
+                    //Bukkit.broadcastMessage("success");
+                } catch (IllegalAccessException e2) {
+                    e2.printStackTrace();
+                } catch (InvocationTargetException e2) {
+                    e2.printStackTrace();
+                }
+            } catch (NoSuchMethodException e1) {
+                //e1.printStackTrace();
+                //Bukkit.broadcastMessage("fallback");
+                for (Method m : socket.getClass().getMethods()) {
 
-                if(!params[2].isInstance(slot))
-                    continue;
+                    Class<?>[] params = m.getParameterTypes();
+                    if(params.length != 3)
+                        continue;
 
-                if(!params[1].isInstance(item))
-                    continue;
+                    if(!params[2].isInstance(slot))
+                        continue;
 
-                if(params[0].isInstance(e))
-                {
-                    try {
-                        m.invoke(socket, e, item, slot);
-                    } catch (IllegalAccessException e1) {
-                        e1.printStackTrace();
-                    } catch (InvocationTargetException e1) {
-                        e1.printStackTrace();
+                    if(!params[1].isInstance(item))
+                        continue;
+
+                    if(params[0].isInstance(e))
+                    {
+                        try {
+                            m.invoke(socket, e, item, slot);
+                        } catch (IllegalAccessException e2) {
+                            e2.printStackTrace();
+                        } catch (InvocationTargetException e2) {
+                            e2.printStackTrace();
+                        }
+
+                        break;
                     }
 
-                    break;
                 }
+
             }
 
-
         }
-
 
     }
 

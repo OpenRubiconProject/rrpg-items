@@ -2,6 +2,7 @@ package com.openrubicon.items.classes.items.specs;
 
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.items.helpers.Constants;
+import org.bukkit.Bukkit;
 
 public class ItemSpecsFactory {
 
@@ -106,6 +107,8 @@ public class ItemSpecsFactory {
         exponent = Helpers.scale(exponent, 0.5, 10, 1.75, 2.92);
 
         double base = (20.7 * rarityFactor) / ((Constants.MAX_RARITY + 1 - rarity) * 2 / 3);
+
+        //Bukkit.broadcastMessage(base+":"+base*1.32);
 
         double value = Math.pow(Helpers.randomDouble(base, base * 1.32), exponent);
 

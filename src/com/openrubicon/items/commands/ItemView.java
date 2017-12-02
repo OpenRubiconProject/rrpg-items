@@ -4,6 +4,7 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.interactables.Player;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.utility.DynamicPrimitive;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ItemView extends Command {
     }
 
     @Override
-    public void handle(Interactable interactable, String[] strings) {
+    public void handle(Interactable interactable, ArrayList<DynamicPrimitive> args) {
         org.bukkit.entity.Player player = ((Player)interactable).getPlayer();
 
         UniqueItem uniqueItem = new UniqueItem(player.getInventory().getItemInMainHand());

@@ -29,7 +29,7 @@ public class SteelFeet extends Socket {
 
     @Override
     public String getDescription() {
-        return "Landing on the ground will bounce you back up in the air";
+        return "Lowers damage taken by falling";
     }
 
     @Override

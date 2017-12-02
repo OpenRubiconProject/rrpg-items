@@ -4,12 +4,14 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.interactables.Player;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.utility.DynamicPrimitive;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.items.classes.items.specs.ItemSpecs;
 import com.openrubicon.items.classes.items.specs.ItemSpecsFactory;
 import com.openrubicon.items.classes.items.unique.UniqueItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +21,7 @@ public class ItemGenerateWithCoreSpecs extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "item generate specs $ $ $";
+        return "item generate specs $n $n $n";
     }
 
     @Override
@@ -31,12 +33,12 @@ public class ItemGenerateWithCoreSpecs extends Command {
     }
 
     @Override
-    public void handle(Interactable interactable, String[] strings) {
+    public void handle(Interactable interactable, ArrayList<DynamicPrimitive> args) {
         org.bukkit.entity.Player player = ((Player)interactable).getPlayer();
 
-        double rarity = Integer.parseInt(strings[0]);
-        double sockets = Integer.parseInt(strings[1]);
-        double power = Integer.parseInt(strings[2]);
+        double rarity = args.get(0).getInt();
+        double sockets = args.get(1).getInt();
+        double power = args.get(2).getInt();
 
         ItemSpecs itemSpecs = ItemSpecsFactory.generateFromCoreValues(rarity, sockets, power);
 
